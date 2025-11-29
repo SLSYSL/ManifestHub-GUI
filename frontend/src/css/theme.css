@@ -1,0 +1,75 @@
+/* ./src/css/theme.css */
+/* 浅色模式变量 */
+:root {
+  --primary-color: #0078d4;
+  --primary-light: #e3f2fd;
+  --primary-dark: #005a9e;
+
+  --background-color: rgba(255, 255, 255);
+  --sidebar-bg: rgb(248, 249, 250);
+  --topbar-bg: rgb(241, 245, 249);
+
+  --card-bg: rgb(255, 255, 255);
+  --card-hover: rgb(244, 244, 244);
+
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+
+  --btn-bg: #0000000d;
+  --btn-hover-bg: #0000001a;
+
+  --hover-color: rgb(233, 236, 239);
+
+  --border: #ccc;
+
+  --snow-color: #BBBBBB;
+  --snow-shadow: 0 0 20px black;
+
+  --shadow-light: 0 2px 5px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* 深色模式变量 */
+:root[dark-mode] {
+  --primary-color: #20a6ff;
+  --primary-light: #4cc9f026;
+  --primary-dark: #5daafd;
+
+  --background-color: rgb(50, 50, 64);
+  --sidebar-bg: rgb(50, 50, 64);
+  --topbar-bg: rgb(45, 45, 61);
+
+  --card-bg: rgba(255, 255, 255, 0.047);
+  --card-hover: rgba(255, 255, 255, 0.098);
+
+  --text-primary: #f0f0f0;
+  --text-secondary: #b0b0b0;
+
+  --btn-bg: #ffffff0d;
+  --btn-hover-bg: #ffffff1a;
+
+  --hover-color: #4cc4f00a;
+
+  --border: #555;
+
+  --snow-color: white;
+  --snow-shadow: 0 0 20px white;
+
+  --shadow-light: 0 2px 5px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+:root[glass-mode="light"] {
+  --background-color: rgba(255, 255, 255, 0.9);
+  --sidebar-bg: rgb(248, 249, 250, 0.2);
+  --topbar-bg: rgb(241, 245, 249, 0.2);
+
+  --card-bg: rgb(255, 255, 255, 0.2);
+  --card-hover: rgb(244, 244, 244, 0.2);
+}
+
+:root[glass-mode="dark"] {
+  --background-color: rgb(50, 50, 64, 0.95);
+  --sidebar-bg: rgb(50, 50, 64, 0.2);
+  --topbar-bg: rgb(45, 45, 61, 0.2);
+}

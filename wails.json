@@ -1,0 +1,23 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "ManifestHub GUI",
+  "outputfilename": "Manifesthub GUI",
+  "frontend:path": "frontend",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "LANREN",
+    "email": "2118254764@qq.com"
+  },
+  "webview": {
+    "hardwareAcceleration": "enabled",
+    "additionalBrowserArguments": [
+      "--enable-gpu-rasterization",
+      "--enable-scroll-animations",
+      "--disable-scroll-animations-on-main-thread",
+      "--enable-compositor-thread-scrolling"
+    ]
+  }
+}

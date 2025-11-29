@@ -1,0 +1,130 @@
+/* ./src/css/secondary.css */
+.fade-animation {
+    animation: fadeInScale 0.5s ease-in-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 超链接优化 */
+@-webkit-keyframes link-glow {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+@keyframes link-glow {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+a:not(.nav-item) {
+    position: relative;
+    color: #60a5fa;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+    transform: translateZ(0);
+}
+
+a:not(.nav-item)::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg,
+            #60a5fa4d 0%,
+            #93c5fdb3 50%,
+            #a5b4fc4d 100%);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+a:not(.nav-item):hover {
+    color: #7ebdd8 !important;
+    text-shadow: 0 0 8px rgba(0, 102, 255, 0.2);
+}
+
+a:not(.nav-item):hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+    background-size: 200% auto;
+    -webkit-animation: link-glow 1.5s linear infinite;
+    animation: link-glow 1.5s linear infinite;
+}
+
+/* 下雪 */
+@keyframes fall {
+    0% {
+        transform: translateY(-10px) translateX(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(60vh) translateX(var(--h)) scale(1.05);
+    }
+
+    100% {
+        transform: translateY(100vh) translateX(var(--h)) scale(0.9);
+    }
+}
+
+.snow {
+    position: fixed;
+    top: -10px;
+    left: 0;
+    width: var(--size, 8px);
+    height: var(--size, 8px);
+    background: var(--snow-color);
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(0.4px);
+    box-shadow: var(--snow-shadow);
+    opacity: 0.9;
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    z-index: 1;
+}
+
+.featured-games {
+    will-change: scroll-position;
+    transform: translateZ(0);
+
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+
+    contain: layout paint;
+    backface-visibility: hidden;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.home-search {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+}

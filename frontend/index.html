@@ -1,0 +1,121 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManifestHub GUI</title>
+</head>
+
+<body>
+  <!-- 主页面 -->
+  <div class="app-container">
+    <!-- 侧边栏 -->
+    <aside class="sidebar collapsed" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <button class="nav-btn" id="sidebar-btn">
+            <i class="fas fa-list"></i>
+            <span class="logo-text">菜单栏</span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#home" class="nav-item active" data-page="home">
+          <i class="fas fa-gamepad"></i>
+          <span class="nav-text">游戏入库</span>
+        </a>
+        <a href="#profile" class="nav-item" data-page="profile">
+          <i class="fa fa-user"></i>
+          <span class="nav-text">个人资料</span>
+        </a>
+        <a href="#messages" class="nav-item" data-page="messages">
+          <i class="fa fa-envelope"></i>
+          <span class="nav-text">消息</span>
+        </a>
+        <a href="#settings" class="nav-item" data-page="settings">
+          <i class="fa fa-cog"></i>
+          <span class="nav-text">设置</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+      <!-- 顶部标题栏 -->
+      <header class="top-bar">
+        <span class="title" id="page-title"><i class="fa fa-home me-2"></i>游戏入库</span>
+        <div class="link-center">
+          <span>友情链接:</span>
+          <a href="https://store.steampowered.com/" target="_blank" rel="noopener noreferrer">Steam</a>
+          <a href="https://steamtools.net/" target="_blank" rel="noopener noreferrer">SteamTools</a>
+          <a href="https://steamui.com/" target="_blank" rel="noopener noreferrer">SteamUI</a>
+        </div>
+      </header>
+
+      <!-- 页面内容 -->
+      <div class="page-content">
+        <div class="page" id="home-page">
+          <!-- 搜索框 -->
+          <div class="home-search">
+            <div class="input-wrapper">
+              <input id="home-steam-search" type="text" class="form-control" placeholder=" ">
+              <label for="home-steam-search" class="custom-placeholder">搜索游戏名 (仅国区游戏)</label>
+            </div>
+            <button id="home-steam-search-btn" class="app-btn">搜索</button>
+          </div>
+
+          <div id="featured-games" class="featured-games"></div>
+          <div id="featured-error" class="text-danger small"></div>
+
+        </div>
+
+        <div class="page page-none fade-animation" id="profile-page">
+          <div class="card">
+            <h2>个人资料</h2>
+            <p>管理您的个人信息和账户设置。</p>
+          </div>
+        </div>
+
+        <div class="page page-none fade-animation" id="messages-page">
+          <div class="card">
+            <h2>消息中心</h2>
+            <p>查看和回复您的消息。</p>
+          </div>
+        </div>
+
+        <div class="page page-none fade-animation" id="settings-page">
+          <div class="card">
+            <h2>个性化设置</h2>
+            <p class="mb-1">自定义您的使用体验</p>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="dark-mode">
+              <label class="form-check-label" for="dark-mode">深色模式</label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="glass">
+              <label class="form-check-label" for="glass">毛玻璃效果</label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="snow">
+              <label class="form-check-label" for="snow">下雪效果</label>
+            </div>
+          </div>
+          <div class="card">
+            <h2>清理个性化数据</h2>
+            <p class="mb-2">重置您的个性化设置</p>
+            <button class="app-btn" id="clear-cache"><i class="fa fa-trash me-1"></i>清理个性化数据</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 导入 Vite 入口模块 -->
+  <script type="module" src="./src/main.js"></script>
+</body>
+
+</html>

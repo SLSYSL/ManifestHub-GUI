@@ -1,0 +1,374 @@
+/* ./scr/css/important.css */
+/* 全局样式重置 */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #888 transparent;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+body {
+    transition: background-color 0.4s ease, color 0.4s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+/* 主容器 */
+.app-container {
+    display: flex;
+    height: 100%;
+}
+
+/* 侧边栏样式 */
+.sidebar {
+    width: 190px;
+    background-color: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.4s ease;
+    box-shadow: var(--shadow-light);
+    flex-shrink: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+}
+
+.sidebar-header {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+}
+
+.logo {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo i {
+    font-size: 1.5rem;
+}
+
+.logo-text {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.sidebar .logo-text,
+.sidebar .nav-text {
+    transition: opacity 0.4s ease;
+    opacity: 1;
+}
+
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .nav-text {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.nav-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 0.75rem;
+    height: 48px;
+    min-width: 48px;
+    box-sizing: border-box;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: transform 0.4s ease, background-color 0.4s ease, color 0.4s ease;
+    white-space: nowrap;
+}
+
+.sidebar-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 0 1rem;
+}
+
+/* 统一导航项高度 */
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 0.75rem;
+    height: 48px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: transform 0.4s ease, background-color 0.4s ease, color 0.4s ease;
+    white-space: nowrap;
+    border-radius: 10px;
+    margin: 0 0 10px;
+    box-sizing: border-box;
+}
+
+.nav-item:hover,
+.nav-btn:hover {
+    transform: scale(0.9);
+    background-color: var(--hover-color);
+    color: var(--primary-color);
+}
+
+.sidebar.collapsed .nav-item:hover,
+.sidebar.collapsed .nav-btn:hover {
+    transform: scale(0.85);
+}
+
+.nav-item.active {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+}
+
+.nav-item i,
+.nav-btn i {
+    font-size: 1.3rem;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    flex: 0 0 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-footer {
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+}
+
+/* 主内容区样式 */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* 顶部标题栏 */
+.top-bar {
+    padding: 1rem 2rem;
+    background-color: var(--topbar-bg);
+    box-shadow: var(--shadow-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+}
+
+.title {
+    flex-shrink: 0;
+    font-size: 1.5rem;
+}
+
+.link-center {
+    display: flex;
+    gap: 10px;
+    justify-content: right;
+    flex-shrink: 0;
+}
+
+/* 页面内容 */
+.page-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.page {
+    animation: fade-in 0.5s ease;
+}
+
+/* 卡片元素 */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: box-shadow 0.4s ease, transform 0.4s ease, background-color 0.4s ease;
+}
+
+.card:hover {
+    background-color: var(--card-hover);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+/* 输入元素 */
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.form-control {
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 12px;
+    color: var(--text-secondary);
+    background-color: var(--btn-bg);
+    transition: border 0.4s ease;
+}
+
+.form-control:focus {
+    background-color: var(--btn-bg);
+    color: var(--text-secondary)
+}
+
+.custom-placeholder {
+    opacity: 1;
+    position: absolute;
+    left: 15px;
+    top: 20px;
+    transform: translateY(-50%);
+    transition: opacity 0.3s ease;
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.form-control:focus+.custom-placeholder,
+.form-control:not(:placeholder-shown)+.custom-placeholder {
+    opacity: 0;
+}
+
+/* checkbox 光标样式 */
+input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.music-span {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 隐藏页面 */
+.page {
+    opacity: 1;
+    max-height: 1000%;
+    overflow: hidden;
+    transition: opacity 0.8s ease !important;
+}
+
+.page-none {
+    opacity: 0;
+    max-height: 0;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+/* 按钮元素 */
+.app-btn {
+    width: 200px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 10px;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    background: var(--btn-bg);
+    color: var(--text-secondary);
+    transition: color 0.4s ease, background-color 0.4s ease, transform 0.4s ease, border 0.4s ease;
+}
+
+.app-btn:hover {
+    background-color: var(--btn-hover-bg);
+    transform: scale(0.95);
+}
+
+/* 添加动画效果 */
+.nav-item,
+.nav-btn {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 页面切换动画 */
+.page {
+    animation: slideIn 0.5s ease-in-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h2 {
+    color: var(--primary-color);
+    margin-bottom: 3px;
+}
+
+p,
+label,
+h4,
+span {
+    color: var(--text-secondary);
+}
+
+/* 响应式调整 - 移除隐藏侧边栏的逻辑 */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60px;
+        /* 小屏幕默认保持收缩状态 */
+    }
+
+    .sidebar:not(.collapsed) {
+        width: 240px;
+        /* 展开时的宽度 */
+    }
+
+    .main-content {
+        width: calc(100% - 60px);
+        /* 计算剩余宽度 */
+    }
+
+    .sidebar:not(.collapsed)+.main-content {
+        width: calc(100% - 240px);
+        /* 侧边栏展开时的宽度计算 */
+    }
+}
