@@ -1,3 +1,4 @@
+/* config.go */
 package main
 
 import (
@@ -35,7 +36,7 @@ func CreateConfig() {
 
 		viper.SetDefault("read_steam_path", true)
 		viper.SetDefault("download_path", "./Download")
-		viper.SetDefault("local_depot_key", false)
+		viper.SetDefault("add_dlc", true)
 
 		// 写入配置文件（生成 JSON）
 		if err := viper.WriteConfig(); err != nil {

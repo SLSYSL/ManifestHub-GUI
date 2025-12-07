@@ -146,19 +146,21 @@ document.addEventListener('DOMContentLoaded', function () {
             if (finalPrice === 0 || game.is_free) {
                 priceInfo = '免费';
             } else if (finalPrice < initialPrice) {
-                priceInfo = `¥${(finalPrice / 100).toFixed(2)} <span class="text-danger">(-${discountPercent}%)</span> <span class="text-decoration-line-through">¥${(initialPrice / 100).toFixed(2)}</span>`;
+                priceInfo = `¥ ${(finalPrice / 100).toFixed(2)} <span class="text-danger">(-${discountPercent}%)</span> <span class="text-decoration-line-through">¥${(initialPrice / 100).toFixed(2)}</span>`;
             } else {
-                priceInfo = `¥${(finalPrice / 100).toFixed(2)}`;
+                priceInfo = `¥ ${(finalPrice / 100).toFixed(2)}`;
             }
 
-            gameElement.innerHTML = `<div class="d-flex flex-row justify-content-between align-items-center p-3 mb-2 rounded" style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                <div class="game-info d-flex flex-row align-items-center" style="flex: 1;">
-                <img src="${imageSrc}" class="game-image me-3" style="width: 225px; height: 105px;  border-radius: 4px;">
-                <div style="flex: 1;">
-                    <div class="fw-bold">${gameName}</div>
-                    <span class="small">AppID: ${appId}</span>
-                    <div class="price-info">${priceInfo}</div>
-                </div>
+            gameElement.innerHTML = `
+            <div class="game-info flex-row justify-content-between align-items-center card">
+                <div class="d-flex align-items-center">
+                    <img src="${imageSrc}" class="me-3" style="width: 225px; height: 105px; border-radius: 5px;">
+                    <div>
+                        <div class="fw-bold">${gameName}</div>
+                        <span class="small">AppID: ${appId}</span>
+                        <div>${priceInfo}</div>
+                        <a href="https://store.steampowered.com/app/${appId}/" target="_blank" rel="noopener noreferrer">Steam 商店链接</a>
+                    </div>
                 </div>
                 <button class="app-btn add-to-library-btn" data-appid="${appId}">入库</button>
             </div>`;
@@ -170,22 +172,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 处理入库按钮点击
         featuredGamesContainer.addEventListener('click', async function (event) {
-            if (event.target.classList.contains('add-to-library-btn')) {
-                const btn = event.target;
-                const appID = btn.getAttribute('data-appid');
-                const originalText = btn.textContent;
-                btn.textContent = '处理中...';
-                btn.disabled = true;
+            const btn = event.target.closest('.add-to-library-btn');
+            if (btn.dataset.loading === 'true') return;
 
-                try {
-                    if (!window.go?.main?.App?.AddGameToLibrary) throw new Error('Wails入库函数未正确加载');
-                    showBootstrapNotification(await window.go.main.App.AddGameToLibrary(appID), 'success');
-                } catch (error) {
-                    showBootstrapNotification('入库失败: ' + error.message, 'error');
-                } finally {
-                    btn.textContent = originalText;
-                    btn.disabled = false;
-                }
+            const appID = btn.getAttribute('data-appid');
+            const originalText = btn.textContent.trim();
+            btn.dataset.loading = 'true';
+            btn.textContent = '正在入库...';
+            btn.disabled = true;
+
+            try {
+                if (!window.go?.main?.App?.AddGameToLibrary) throw new Error('Wails入库函数未正确加载');
+                const result = await window.go.main.App.AddGameToLibrary(appID);
+                showBootstrapNotification(result, 'success');
+            } catch (error) {
+                showBootstrapNotification('入库失败: ' + error.message, 'error');
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+                btn.dataset.loading = 'false';
+                btn.classList.remove('disabled');
             }
         });
     }

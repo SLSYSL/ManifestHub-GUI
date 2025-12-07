@@ -14,16 +14,17 @@ html {
 }
 
 body {
-    transition: background-color 0.4s ease, color 0.4s ease;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--background-color);
     color: var(--text-primary);
+    background-color: var(--background-color);
     height: 100vh;
     overflow-x: hidden;
 }
 
 /* 主容器 */
 .app-container {
+    transition: background-color 0.4s ease, color 0.4s ease;
+    background: var(--background-color-container);
     display: flex;
     height: 100%;
 }
@@ -34,7 +35,7 @@ body {
     background-color: var(--sidebar-bg);
     display: flex;
     flex-direction: column;
-    transition: width 0.4s ease;
+    transition: width 0.4s ease, background-color 0.4s ease;
     box-shadow: var(--shadow-light);
     flex-shrink: 0;
     overflow-y: auto;
@@ -82,6 +83,7 @@ body {
 }
 
 .nav-btn {
+    color: var(--text-primary);
     width: 100%;
     display: flex;
     align-items: center;
@@ -90,7 +92,6 @@ body {
     height: 48px;
     min-width: 48px;
     box-sizing: border-box;
-    color: var(--text-secondary);
     background: none;
     border: none;
     cursor: pointer;
@@ -113,12 +114,12 @@ body {
 
 /* 统一导航项高度 */
 .nav-item {
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 0.75rem;
     padding: 0 0.75rem;
     height: 48px;
-    color: var(--text-secondary);
     text-decoration: none;
     transition: transform 0.4s ease, background-color 0.4s ease, color 0.4s ease;
     white-space: nowrap;
@@ -141,7 +142,7 @@ body {
 
 .nav-item.active {
     background-color: var(--primary-light);
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
 }
 
 .nav-item i,
@@ -180,6 +181,7 @@ body {
     align-items: center;
     justify-content: space-between;
     height: 60px;
+    transition: background-color 0.4s ease;
 }
 
 .title {
@@ -227,35 +229,35 @@ body {
     width: 100%;
 }
 
-.form-control {
+.form-control[type="file"],
+select.form-select,
+input.form-control[type="text"],
+input.form-control[type="text"]:focus {
     height: 40px;
+    color: var(--text-primary) !important;
+    background-color: var(--btn-bg) !important;
+    border: 1px solid var(--border) !important;
     border-radius: 10px;
-    border: 1px solid var(--border);
-    padding: 12px;
-    color: var(--text-secondary);
-    background-color: var(--btn-bg);
     transition: border 0.4s ease;
 }
 
-.form-control:focus {
-    background-color: var(--btn-bg);
-    color: var(--text-secondary)
+input.form-control[type="text"] {
+    padding: 12px;
 }
 
 .custom-placeholder {
     opacity: 1;
     position: absolute;
-    left: 15px;
+    left: 14px;
     top: 20px;
     transform: translateY(-50%);
     transition: opacity 0.3s ease;
-    color: var(--text-secondary);
     pointer-events: none;
 }
 
-.form-control:focus+.custom-placeholder,
-.form-control:not(:placeholder-shown)+.custom-placeholder {
-    opacity: 0;
+input.form-control[type="text"]:focus+.custom-placeholder,
+input.form-control[type="text"]:not(:placeholder-shown)+.custom-placeholder {
+    opacity: 0 !important;
 }
 
 /* checkbox 光标样式 */
@@ -294,7 +296,6 @@ input[type="checkbox"] {
     padding: 8px 16px;
     border: 1px solid var(--border);
     background: var(--btn-bg);
-    color: var(--text-secondary);
     transition: color 0.4s ease, background-color 0.4s ease, transform 0.4s ease, border 0.4s ease;
 }
 
@@ -346,11 +347,14 @@ h2 {
 p,
 label,
 h4,
-span {
-    color: var(--text-secondary);
+span,
+button,
+input,
+h5 {
+    color: var(--text-primary) !important;
 }
 
-/* 响应式调整 - 移除隐藏侧边栏的逻辑 */
+/* 响应式调整 */
 @media (max-width: 768px) {
     .sidebar {
         width: 60px;

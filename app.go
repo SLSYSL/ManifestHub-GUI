@@ -1,11 +1,13 @@
+/* app.go */
 package main
 
 import (
 	"context"
 	"fmt"
-	"io"
-	"net/http"
-	"net/url"
+	"log"
+	"path/filepath"
+
+	"github.com/winterssy/sreq"
 )
 
 // App struct
@@ -26,26 +28,44 @@ func (a *App) startup(ctx context.Context) {
 
 // 获取热门 Steam 游戏列表
 func (a *App) GetSteamFeatured() (string, error) {
-	resp, err := Client.Get("https://store.steampowered.com/api/featured/?l=schinese&cc=CN")
+	body, err := sreq.Get("https://store.steampowered.com/api/featured/?l=schinese&cc=CN").
+		Text()
 	if err != nil {
 		return "", LogAndError("获取 Steam 热门游戏列表失败: %v", err)
 	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return "", LogAndError("获取 Steam 数据失败, 状态码: %d", resp.StatusCode)
-	}
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "", LogAndError("读取 Steam 响应失败: %v", err)
-	}
-
-	return string(body), nil
+	return body, nil
 }
 
 // 入库
 func (a *App) AddGameToLibrary(APPID string) (string, error) {
+	depotkeys, err := GetDepotkeys()
+	if err != nil {
+		return "", LogAndError("获取 DepotKeys 失败: %v", err)
+	}
+
+	manifests, err := GetManifests(APPID)
+	if err != nil {
+		return "", LogAndError("获取 Manifests 失败: %v", err)
+	}
+
+	var path string
+
+	if CONFIG_READ_STEAM_PATH {
+		path, err = GetSteamGamePath()
+		path = filepath.Join(path, APPID+".lua")
+	} else {
+		path = filepath.Join(CONFIG_DOWNLOAD_PATH, APPID+".lua")
+	}
+	if err != nil {
+		log.Printf("获取 Steam 游戏路径失败: %v, 将使用配置的下载路径", err)
+		path = filepath.Join(CONFIG_DOWNLOAD_PATH, APPID+".lua")
+		err = nil
+	}
+
+	err = GenerateLua(APPID, path, depotkeys, manifests)
+	if err != nil {
+		return "", LogAndError("生成 Lua 文件失败: %v", err)
+	}
 
 	return fmt.Sprintf("游戏 %s 已成功添加到库中", APPID), nil
 }
@@ -53,33 +73,22 @@ func (a *App) AddGameToLibrary(APPID string) (string, error) {
 // 游戏搜索
 func (a *App) SearchSteamGames(searchTerm string) (string, error) {
 	// 编码
-	encodedTerm := url.QueryEscape(searchTerm)
-	apiUrl := fmt.Sprintf("https://store.steampowered.com/api/storesearch/?term=%s&l=schinese&cc=CN", encodedTerm)
+	params := sreq.Params{
+		"term": searchTerm,
+		"l":    "schinese",
+		"cc":   "CN",
+	}
+	headers := sreq.Headers{
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+	}
 
-	req, err := http.NewRequest("GET", apiUrl, nil)
+	body, err := sreq.Get("https://store.steampowered.com/api/storesearch/",
+		sreq.WithQuery(params),
+		sreq.WithHeaders(headers),
+	).Text()
+
 	if err != nil {
-		return "", LogAndError("创建搜索请求失败: %v", err)
+		return "", LogAndError("搜索Steam游戏失败: %v", err)
 	}
-
-	// 避免API拒绝访问
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-
-	resp, err := Client.Do(req)
-	if err != nil {
-		return "", LogAndError("请求第三方搜索API失败: %v", err)
-	}
-	defer resp.Body.Close()
-
-	// 检查响应状态码
-	if resp.StatusCode != http.StatusOK {
-		return "", LogAndError("搜索失败，状态码: %d", resp.StatusCode)
-	}
-
-	// 读取响应体
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "", LogAndError("读取搜索结果失败: %v", err)
-	}
-
-	return string(body), nil
+	return body, nil
 }

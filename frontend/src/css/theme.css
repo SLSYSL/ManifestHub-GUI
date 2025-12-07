@@ -12,8 +12,7 @@
   --card-bg: rgb(255, 255, 255);
   --card-hover: rgb(244, 244, 244);
 
-  --text-primary: #1a1a1a;
-  --text-secondary: #666666;
+  --text-primary: #333;
 
   --btn-bg: #0000000d;
   --btn-hover-bg: #0000001a;
@@ -22,8 +21,8 @@
 
   --border: #ccc;
 
-  --snow-color: #BBBBBB;
-  --snow-shadow: 0 0 20px black;
+  --snow-color: white;
+  --snow-shadow: 0 0 20px white;
 
   --shadow-light: 0 2px 5px rgba(0, 0, 0, 0.1);
   --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.12);
@@ -42,8 +41,7 @@
   --card-bg: rgba(255, 255, 255, 0.047);
   --card-hover: rgba(255, 255, 255, 0.098);
 
-  --text-primary: #f0f0f0;
-  --text-secondary: #b0b0b0;
+  --text-primary: #b0b0b0;
 
   --btn-bg: #ffffff0d;
   --btn-hover-bg: #ffffff1a;
@@ -72,4 +70,35 @@
   --background-color: rgb(50, 50, 64, 0.95);
   --sidebar-bg: rgb(50, 50, 64, 0.2);
   --topbar-bg: rgb(45, 45, 61, 0.2);
+}
+
+:root[img-mode="light"] {
+  --primary-light: rgb(227, 242, 253, 0.5);
+
+  --background-color-container: rgb(50, 50, 64, 0.1);
+  --sidebar-bg: rgb(248, 249, 250, 0.4);
+  --topbar-bg: rgb(241, 245, 249, 0.4);
+
+  --hover-color: rgb(233, 236, 239, 0.4);
+
+  --card-bg: rgb(255, 255, 255, 0.7);
+  --card-hover: rgb(244, 244, 244, 0.6);
+
+  --btn-bg: rgba(107, 107, 107, 0.2);
+  --btn-hover-bg: rgba(92, 92, 92, 0.4);
+
+  --border: rgb(204, 204, 204, 0.5);
+}
+:root[img-mode="dark"] {
+  --background-color-container: rgb(50, 50, 64, 0.1);
+  --sidebar-bg: rgb(50, 50, 64, 0.55);
+  --topbar-bg: rgb(45, 45, 61, 0.5);
+
+  --card-bg: rgba(45, 45, 61, 0.8);
+  --card-hover: rgba(45, 45, 61, 0.7);
+
+  --btn-bg: rgba(45, 45, 61, 0.5);
+  --btn-hover-bg: rgba(92, 92, 92, 0.4);
+
+  --border: rgb(85, 85, 85, 0.5);
 }

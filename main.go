@@ -1,3 +1,4 @@
+/* main.go */
 package main
 
 import (
@@ -89,9 +90,9 @@ func main() {
 
 	// 创建带选项的应用程序
 	err := wails.Run(&options.App{
-		Title:            "ManifestHub GUI",
-		Width:            1024,
-		Height:           768,
+		Title:            "ManifestHub",
+		Width:            1536,
+		Height:           1152,
 		WindowStartState: options.Normal,
 		Windows: &windows.Options{
 			WebviewIsTransparent:              true, // WebView 透明
