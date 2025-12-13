@@ -24,9 +24,9 @@
 - Windows 10 1809+
 
 软件数据:
-- 日志文件: `%AppData/ManifestHub GUI/Log`
-- 配置文件: `%AppData/ManifestHub GUI/Config`
-- 缓存文件: `%AppData/程序名.exe`
+- 日志文件: `%AppData%/ManifestHub GUI/Log`
+- 配置文件: `%AppData%/ManifestHub GUI/Config`
+- 缓存文件: `%AppData%/程序名.exe`
 
 未来路线发展: <a href="./doc/markdown/future.md">future.md</a>
 开发文档: <a href="./doc/markdown/developer.md">developer.md</a>
