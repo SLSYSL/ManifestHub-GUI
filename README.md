@@ -33,7 +33,7 @@
 
 ## 用户界面
 
-<p><img src="./doc/images/app.png" alt="lx-music desktop UI" /></p>
+<p><img src="./doc/images/app.png" alt="ManifestHub UI" /></p>
 
 ## 开源协议
 本项目基于 <a href="https://github.com/SLSYSL/ManifestHub-GUI/blob/master/LICENSE">MIT License</a> 许可证发行
