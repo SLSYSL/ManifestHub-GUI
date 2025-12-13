@@ -3,6 +3,7 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -101,7 +102,7 @@ func main() {
 
 	// 创建带选项的应用程序
 	err := wails.Run(&options.App{
-		Title:            "ManifestHub",
+		Title:            fmt.Sprintf("ManifestHub - %s", version),
 		Width:            1536,
 		Height:           1152,
 		WindowStartState: options.Normal,
@@ -119,6 +120,8 @@ func main() {
 			app,
 		},
 	})
+
+	log.Printf("当前版本: %s", version)
 
 	if err != nil {
 		log.Println("Wails 启动失败: ", err.Error())
