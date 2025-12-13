@@ -7,52 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const errorDiv = document.getElementById('featured-error');
     let gamesLoaded = false; // 标记游戏是否已加载
 
-    // 显示通知
-    function showBootstrapNotification(message, type) {
-        if (!message) return;
-        let toastContainer = document.getElementById('toast-container');
-        if (!toastContainer) {
-            toastContainer = document.createElement('div');
-            toastContainer.id = 'toast-container';
-            toastContainer.className = 'toast-container position-fixed top-0 end-0';
-            toastContainer.style.zIndex = '10';
-            document.body.appendChild(toastContainer);
-        }
-
-        const toastElement = document.createElement('div');
-        toastElement.className = 'toast';
-        toastElement.id = 'toast-' + Date.now();
-        toastElement.setAttribute('role', 'alert');
-        toastElement.innerHTML = `<div class="toast-header ${type === 'success' ? 'bg-success text-white' : 'bg-danger text-white'}">
-            <strong class="me-auto">${type === 'success' ? '成功' : '错误'}</strong>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">${message}</div>`;
-
-        toastContainer.appendChild(toastElement);
-
-        // 通知实现
-        if (!document.querySelector('#fallback-notification-style')) {
-            const style = document.createElement('style');
-            style.id = 'fallback-notification-style';
-            style.textContent = '@keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } } @keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } } .notification-fade-in { animation: slideInRight 0.3s ease; } .notification-fade-out { animation: slideOutRight 0.3s ease; }';
-            document.head.appendChild(style);
-        }
-
-        const fallbackDiv = document.createElement('div');
-        fallbackDiv.className = 'notification-fade-in';
-        fallbackDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 10px 15px; background: ' + (type === 'success' ? '#28a745' : '#dc3545') + '; color: white; border-radius: 4px; z-index: 9999; min-width: 200px; max-width: 400px; word-wrap: break-word;';
-        fallbackDiv.textContent = message;
-        document.body.appendChild(fallbackDiv);
-
-        setTimeout(() => {
-            if (fallbackDiv.parentNode) {
-                fallbackDiv.className = 'notification-fade-out';
-                setTimeout(() => fallbackDiv.remove(), 300);
-            }
-        }, 3000);
-    }
-
     // 从Wails后端获取Steam特色游戏列表
     async function loadFeaturedGames() {
         try {
@@ -73,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
             displayGames(data);
             gamesLoaded = true;
         } catch (error) {
-            errorDiv.textContent = '加载游戏数据失败: ' + error.message;
+            errorDiv.textContent = error.toString();
             featuredGamesContainer.innerHTML = '';
             gamesLoaded = false;
         }
@@ -154,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
             gameElement.innerHTML = `
             <div class="game-info flex-row justify-content-between align-items-center card">
                 <div class="d-flex align-items-center">
-                    <img src="${imageSrc}" class="me-3" style="width: 225px; height: 105px; border-radius: 5px;">
+                    <img src="${imageSrc}" class="me-3" style="width: 235px; height: 95px; object-fit: cover; border-radius: 5px;">
                     <div>
                         <div class="fw-bold">${gameName}</div>
                         <span class="small">AppID: ${appId}</span>
@@ -184,9 +138,9 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 if (!window.go?.main?.App?.AddGameToLibrary) throw new Error('Wails入库函数未正确加载');
                 const result = await window.go.main.App.AddGameToLibrary(appID);
-                showBootstrapNotification(result, 'success');
+                showToasts(result, 'success');
             } catch (error) {
-                showBootstrapNotification('入库失败: ' + error.message, 'error');
+                showToasts(error.toString(), 'error');
             } finally {
                 btn.textContent = originalText;
                 btn.disabled = false;
@@ -217,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // 适配Steam Store API搜索返回格式
             displayGames(data);
         } catch (error) {
-            errorDiv.textContent = '搜索失败: ' + error.message;
+            errorDiv.textContent = error.toString();
             featuredGamesContainer.innerHTML = '';
         }
     }

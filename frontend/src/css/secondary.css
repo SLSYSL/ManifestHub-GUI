@@ -150,3 +150,53 @@ a:not(.nav-item):hover::before {
 .game-info {
     color: var(--text-primary);
 }
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.toasts-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 8px;
+    z-index: 100;
+    min-width: 200px;
+    max-width: 400px;
+    word-wrap: break-word;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.toasts-fade-in {
+    animation: slideInRight 0.3s ease forwards;
+}
+
+.toasts-fade-out {
+    animation: slideOutRight 0.3s ease forwards;
+}

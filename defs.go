@@ -3,6 +3,7 @@ package main
 
 import (
 	"github.com/spf13/viper"
+	"github.com/winterssy/sreq"
 )
 
 type DLCInfo struct {
@@ -35,3 +36,6 @@ func initGlobalConfig() {
 	CONFIG_DOWNLOAD_PATH = viper.GetString("download_path")
 	CONFIG_ADD_DLC = viper.GetBool("add_dlc")
 }
+
+// 自定义 HTTP 客户端
+var Client *sreq.Client

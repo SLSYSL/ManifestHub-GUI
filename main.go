@@ -6,11 +6,13 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
+	"github.com/winterssy/sreq"
 )
 
 //go:embed all:frontend/dist
@@ -70,6 +72,9 @@ func CreateLog() {
 }
 
 func init() {
+	// 初始化自定义 HTTP 客户端
+	Client = sreq.New().SetTimeout(10 * time.Second)
+
 	// 在 init 中注册全局 defer，确保程序退出时关闭文件
 	defer func() {
 		if logFile != nil {
@@ -84,6 +89,12 @@ func main() {
 	CreateLog()
 	CreateConfig()
 	initGlobalConfig()
+
+	// 检查配置文件
+	if !CheckConfigIntegrity() {
+		log.Println("配置文件不完整, 将重置配置文件")
+		ResetConfig()
+	}
 
 	// 创建应用程序实例
 	app := NewApp()

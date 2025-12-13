@@ -1,19 +1,39 @@
-# README
+<h1 align="center">ManifestHub GUI</h1>
 
-## About
+<p align="center">
+    <a href="https://github.com/SLSYSL/ManifestHub-GUI/releases"><img src="https://img.shields.io/github/release/SLSYSL/ManifestHub-GUI?include_prereleases" alt="Release Version"></a>
+    <a href="https://github.com/SLSYSL/ManifestHub-GUI/releases"><img src="https://img.shields.io/github/tag/SLSYSL/ManifestHub-GUI" alt="Release Version"></a>
+    <a href="https://github.com/SLSYSL/ManifestHub-GUI/blob/master/LICENSE"><img src="https://img.shields.io/github/license/SLSYSL/ManifestHub-GUI" alt="License"></a>
+</p>
 
-This is the official Wails Vanilla template.
+<p align="center">一个基于 Golang & Wails 开发的提取 Steam 密钥工具</p>
 
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
+## 说明
 
-## Live Development
+技术栈:
+- Wails 2.X
+- Go 1.25+
 
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
+后端依赖库:
+- Viper 1.21.0
+- Wails 2.11.0
+- sreq 0.9.11
+- sys 0.38.0
 
-## Building
+支持平台:
+- Windows 10 1809+
 
-To build a redistributable, production mode package, use `wails build`.
+软件数据:
+- 日志文件: `%AppData/ManifestHub GUI/Log`
+- 配置文件: `%AppData/ManifestHub GUI/Config`
+- 缓存文件: `%AppData/程序名.exe`
+
+未来路线发展: <a href="./doc/markdown/future.md">future.md</a>
+开发文档: <a href="./doc/markdown/developer.md">developer.md</a>
+
+## 用户界面
+
+<p><img src="./doc/images/app.png" alt="lx-music desktop UI" /></p>
+
+## 开源协议
+本项目基于 <a href="https://github.com/SLSYSL/ManifestHub-GUI/blob/master/LICENSE">MIT License</a> 许可证发行

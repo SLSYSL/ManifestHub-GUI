@@ -14,6 +14,6 @@ import './css/secondary.css';
 // import './css/spirit.css';
 
 // 导入主应用组件
-import './js/important.js';
+import './js/app.js';
 import './js/secondary.js';
-// import './js/spirit.js';
+import './js/utils.js';

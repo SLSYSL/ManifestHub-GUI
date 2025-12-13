@@ -6,14 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/winterssy/sreq"
 	"golang.org/x/sys/windows/registry"
@@ -37,12 +35,6 @@ func LogAndError(format string, args ...interface{}) error {
 
 // 获取 DepotKey
 func GetDepotkeys() (map[string]string, error) {
-	httpClient := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-
-	Client := sreq.NewWithHTTPClient(httpClient)
-
 	var lastError error
 
 	for _, url := range DepotkeySources {
@@ -78,12 +70,6 @@ func GetDepotkeys() (map[string]string, error) {
 
 // 获取 Manifests
 func GetManifests(APPID string) (map[string]string, error) {
-	httpClient := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-
-	Client := sreq.NewWithHTTPClient(httpClient)
-
 	headers := sreq.Headers{
 		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
 	}
@@ -153,9 +139,6 @@ func GetManifests(APPID string) (map[string]string, error) {
 
 // 获取 DLC 信息
 func GetDLC(appid string) ([]string, bool, error) {
-	// 创建HTTP客户端
-	client := sreq.New()
-
 	// 设置请求头
 	headers := sreq.Headers{
 		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -165,7 +148,7 @@ func GetDLC(appid string) ([]string, bool, error) {
 	url := fmt.Sprintf("https://api.steamcmd.net/v1/info/%s", appid)
 
 	// 发送请求
-	resp, err := client.Get(url, sreq.WithHeaders(headers)).Text()
+	resp, err := Client.Get(url, sreq.WithHeaders(headers)).Text()
 	if err != nil {
 		return nil, false, fmt.Errorf("请求失败: %v", err)
 	}
