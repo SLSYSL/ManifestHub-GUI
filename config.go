@@ -2,10 +2,9 @@
 package main
 
 import (
+	"log"
 	"os"
 	"path/filepath"
-
-	"log"
 
 	"github.com/spf13/viper"
 )
@@ -14,13 +13,17 @@ import (
 type Config struct {
 	ReadSteamPath bool   `json:"read_steam_path"` // 下载后存入 SteamTools 读取路径文件夹
 	DownloadPath  string `json:"download_path"`   // 下载路径
-	AddDLC        bool   `json:"add_dlc"`         // 是否启用读取本地 DepotKey .json 文件
+	AddDLC        bool   `json:"add_dlc"`         // 添加无 DepotKey DLC
+	SetManifestid bool   `json:"set_manifestid"`  // 设置固定清单
+	GithubToken   string `json:"github_token"`    // GitHub 令牌
 }
 
 var DefaultConfig = Config{
 	ReadSteamPath: true,
 	DownloadPath:  "./Download",
 	AddDLC:        true,
+	SetManifestid: false,
+	GithubToken:   "",
 }
 
 // 创建配置文件
@@ -43,6 +46,8 @@ func CreateConfig() {
 		viper.SetDefault("read_steam_path", DefaultConfig.ReadSteamPath)
 		viper.SetDefault("download_path", DefaultConfig.DownloadPath)
 		viper.SetDefault("add_dlc", DefaultConfig.AddDLC)
+		viper.SetDefault("set_manifestid", DefaultConfig.SetManifestid)
+		viper.SetDefault("github_token", DefaultConfig.GithubToken)
 
 		// 写入配置文件（生成 JSON）
 		if err := viper.WriteConfig(); err != nil {
@@ -58,22 +63,24 @@ func CreateConfig() {
 }
 
 // 修改配置文件
-func ModifyConfig(item string, value interface{}) {
+func ModifyConfig(item string, value interface{}) error {
 	// Viper 设置项值
 	viper.Set(item, value)
 
 	// 保存
 	if err := viper.WriteConfig(); err != nil {
-		log.Printf("保存配置失败: %v", err)
+		LogAndError("保存配置失败: %v", err)
 	}
 
-	// 输出到配置文件
+	// 输出日志
 	log.Printf("%s 项已修改为 %v (类型为%t)", item, value, value)
+
+	return nil
 }
 
 // 检查配置文件完整性
 func CheckConfigIntegrity() bool {
-	requiredKeys := []string{"read_steam_path", "download_path", "add_dlc"}
+	requiredKeys := []string{"read_steam_path", "download_path", "add_dlc", "set_manifestid", "github_token"}
 
 	for _, key := range requiredKeys {
 		if !viper.IsSet(key) {
@@ -89,6 +96,7 @@ func ResetConfig() {
 	viper.SetDefault("read_steam_path", DefaultConfig.ReadSteamPath)
 	viper.SetDefault("download_path", DefaultConfig.DownloadPath)
 	viper.SetDefault("add_dlc", DefaultConfig.AddDLC)
+	viper.SetDefault("set_manifestid", DefaultConfig.SetManifestid)
 
 	// 写入配置文件
 	if err := viper.WriteConfig(); err != nil {

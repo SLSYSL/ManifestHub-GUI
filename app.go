@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
+	"sync"
 
 	"github.com/winterssy/sreq"
 )
@@ -38,17 +39,38 @@ func (a *App) GetSteamFeatured() (string, error) {
 
 // 入库
 func (a *App) AddGameToLibrary(APPID string) (string, error) {
-	depotkeys, err := GetDepotkeys()
-	if err != nil {
-		return "", LogAndError("获取 DepotKeys 失败: %v", err)
+	log.Printf("开始为游戏 %s 入库", APPID)
+
+	var (
+		depotkeys  map[string]string
+		manifests  map[string]string
+		err1, err2 error
+		wg         sync.WaitGroup
+	)
+
+	wg.Add(2)
+	// 并行获取depotkeys
+	go func() {
+		defer wg.Done()
+		depotkeys, err1 = GetDepotkeys()
+	}()
+	// 并行获取manifests
+	go func() {
+		defer wg.Done()
+		manifests, err2 = GetManifests(APPID)
+	}()
+	wg.Wait()
+
+	if err1 != nil {
+		return "", LogAndError("获取 DepotKeys 失败: %v", err1)
 	}
 
-	manifests, err := GetManifests(APPID)
-	if err != nil {
-		return "", LogAndError("获取 Manifests 失败: %v", err)
+	if err2 != nil {
+		return "", LogAndError("获取 Manifests 失败: %v", err2)
 	}
 
 	var path string
+	var err error
 
 	if CONFIG_READ_STEAM_PATH {
 		path, err = GetSteamGamePath()
@@ -79,7 +101,7 @@ func (a *App) SearchSteamGames(searchTerm string) (string, error) {
 		"cc":   "CN",
 	}
 	headers := sreq.Headers{
-		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+		"User-Agent": []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
 	}
 
 	body, err := Client.Get("https://store.steampowered.com/api/storesearch/",
@@ -91,4 +113,27 @@ func (a *App) SearchSteamGames(searchTerm string) (string, error) {
 		return "", LogAndError("搜索Steam游戏失败: %v", err)
 	}
 	return body, nil
+}
+
+// 配置文件
+func (a *App) GetConfig() (Config, error) {
+	// 返回当前所有配置
+	return Config{
+		ReadSteamPath: CONFIG_READ_STEAM_PATH,
+		DownloadPath:  CONFIG_DOWNLOAD_PATH,
+		AddDLC:        CONFIG_ADD_DLC,
+		SetManifestid: CONFIG_SET_MANIFESTID,
+		GithubToken:   CONFIG_GITHUB_TOKEN,
+	}, nil
+}
+
+func (a *App) ModifyConfig(item string, value interface{}) error {
+	// 调用配置修改函数
+	err := ModifyConfig(item, value)
+	if err != nil {
+		return err
+	}
+	// 同步更新全局配置变量
+	initGlobalConfig()
+	return nil
 }

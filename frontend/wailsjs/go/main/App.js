@@ -6,8 +6,16 @@ export function AddGameToLibrary(arg1) {
   return window['go']['main']['App']['AddGameToLibrary'](arg1);
 }
 
+export function GetConfig() {
+  return window['go']['main']['App']['GetConfig']();
+}
+
 export function GetSteamFeatured() {
   return window['go']['main']['App']['GetSteamFeatured']();
+}
+
+export function ModifyConfig(arg1, arg2) {
+  return window['go']['main']['App']['ModifyConfig'](arg1, arg2);
 }
 
 export function SearchSteamGames(arg1) {

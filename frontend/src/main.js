@@ -17,3 +17,4 @@ import './css/secondary.css';
 import './js/app.js';
 import './js/secondary.js';
 import './js/utils.js';
+import './js/config.js';

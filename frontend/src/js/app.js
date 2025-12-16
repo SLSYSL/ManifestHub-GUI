@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 检查Wails函数是否存在并调用
             if (!window.go?.main?.App?.GetSteamFeatured) {
-                throw new Error('无法连接 Wails 后端');
+                throw new Error('无法连接 Wails 后端, 请重启程序');
             }
 
             const response = await window.go.main.App.GetSteamFeatured();
             // 检查响应是否为有效值
             if (!response) {
-                throw new Error('从后端获取的数据为空');
+                throw new Error('从后端获取的数据为空: ' + response);
             }
             const data = typeof response === 'string' ? JSON.parse(response) : response;
             displayGames(data);
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 检查Wails搜索函数是否存在
             if (!window.go?.main?.App?.SearchSteamGames) {
-                throw new Error('搜索功能未初始化，请重启应用');
+                throw new Error('无法连接 Wails 后端, 请重启程序');
             }
 
             // 调用后端搜索接口

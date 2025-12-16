@@ -28,6 +28,8 @@ var (
 	CONFIG_READ_STEAM_PATH bool   // 读取 Steam 的路径
 	CONFIG_DOWNLOAD_PATH   string // 下载路径
 	CONFIG_ADD_DLC         bool   // 入库 DLC
+	CONFIG_SET_MANIFESTID  bool   // 设置固定清单
+	CONFIG_GITHUB_TOKEN    string // GitHub 令牌
 )
 
 func initGlobalConfig() {
@@ -35,6 +37,8 @@ func initGlobalConfig() {
 	CONFIG_READ_STEAM_PATH = viper.GetBool("read_steam_path")
 	CONFIG_DOWNLOAD_PATH = viper.GetString("download_path")
 	CONFIG_ADD_DLC = viper.GetBool("add_dlc")
+	CONFIG_SET_MANIFESTID = viper.GetBool("set_manifestid")
+	CONFIG_GITHUB_TOKEN = viper.GetString("github_token")
 }
 
 // 自定义 HTTP 客户端

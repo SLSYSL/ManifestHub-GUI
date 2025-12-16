@@ -89,59 +89,53 @@
         </div>
 
         <div class="page page-none fade-animation" id="settings-page">
-          <!-- <div class="card">
+          <div class="card">
             <h2>配置文件设置</h2>
             <p class="mb-1">自定义入库逻辑</p>
-            <div class="row">
+            <div class="row mb-2">
               <div class="col-md-6 mb-2">
                 <label class="h5 mb-0" for="read-steam-path">自动入库到 Steam</label>
                 <p class="text-danger mb-1">会影响到“自定义下载路径”</p>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <select class="form-select" id="read-steam-path">
-                      <option value="true">开启</option>
-                      <option value="false">关闭</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-6">
-                    <button id="readsteampath-btn" class="app-btn"><i class="fa fa-cog me-1"></i>设置</button>
-                  </div>
-                </div>
+                <select class="form-select" id="read-steam-path">
+                  <option value="true">开启</option>
+                  <option value="false">关闭</option>
+                </select>
               </div>
               <div class="col-md-6">
                 <label class="h5 mb-0" for="add-dlc">自动入库无 Depot DLC</label>
                 <p class="text-danger mb-1">入库速度变慢</p>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <select class="form-select" id="add-dlc">
-                      <option value="true">开启</option>
-                      <option value="false">关闭</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-6">
-                    <button id="add-dlc-btn" class="app-btn"><i class="fa fa-cog me-1"></i>设置</button>
-                  </div>
-                </div>
+                <select class="form-select" id="add-dlc">
+                  <option value="true">开启</option>
+                  <option value="false">关闭</option>
+                </select>
               </div>
             </div>
 
             <div class="row">
-              <div class="col-md-12">
-                <div class="col-md-6">
-                  <label class="h5 mb-0" for="download-path">自定义下载路径</label>
-                  <p class="text-warning mb-1">启用“自动入库到 Steam”则无效</p>
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <input class="form-control" type="text" value="" id="download-path">
-                    </div>
-                    <div class="col-sm-6">
-                      <button id="download-path-btn" class="app-btn"><i class="fa fa-cog me-1"></i>设置</button>
-                    </div>
-                  </div>
-                </div>
+              <div class="col-md-6 mb-2">
+                <label class="h5 mb-0" for="download-path">自定义下载路径</label>
+                <p class="text-warning mb-1">启用“自动入库到 Steam”则无效</p>
+                <input class="form-control" type="text" value="./Download" id="download-path">
+              </div>
+              <div class="col-md-6">
+                <label class="h5 mb-0" for="set-manifest">固定清单版本</label>
+                <p class="text-danger mb-1">无法自动更新游戏</p>
+                <select class="form-select" id="set-manifest">
+                  <option value="false">关闭</option>
+                  <option value="true">开启</option>
+                </select>
               </div>
             </div>
-          </div> -->
+
+            <div class="row mb-2">
+              <div class="col-md-12">
+                <label class="h5 mb-0" for="github-token">GitHub 访问令牌</label>
+                <p class="text-warning mb-1">用于访问GitHub资源, 避免API限流</p>
+                <input class="form-control" type="text" id="github-token">
+              </div>
+            </div>
+            <button class="app-btn" id="saveConfig"><i class="fa fa-save me-1"></i>保存配置</button>
+          </div>
 
           <div class="card">
             <h2>个性化设置</h2>

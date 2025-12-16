@@ -12,9 +12,15 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/winterssy/sreq"
 	"golang.org/x/sys/windows/registry"
+)
+
+var (
+	addAppidRe = regexp.MustCompile(`addappid\((\d+)`)
+	digitsRe   = regexp.MustCompile(`\d+`)
 )
 
 // 判断字符串是否全为数字
@@ -35,25 +41,62 @@ func LogAndError(format string, args ...interface{}) error {
 
 // 获取 DepotKey
 func GetDepotkeys() (map[string]string, error) {
+	// 请求头
+	baseHeaders := sreq.Headers{
+		"User-Agent": []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
+	}
+
 	var lastError error
 
+	// 遍历源列表
 	for _, url := range DepotkeySources {
 		log.Printf("正在尝试从源获取: %s", url)
 
-		resp, err := Client.Get(url).Text()
+		// 最终请求头
+		reqHeaders := make(sreq.Headers)
+		// 复制基础头到当前请求头
+		for k, v := range baseHeaders {
+			reqHeaders[k] = v
+		}
+
+		isGitHubOfficial := strings.Contains(url, "raw.githubusercontent.com")
+		if isGitHubOfficial {
+			if CONFIG_GITHUB_TOKEN != "" {
+				reqHeaders["Authorization"] = []string{"Bearer " + CONFIG_GITHUB_TOKEN}
+				log.Printf("对 %s 启用 GitHub Token 授权访问", url)
+			} else {
+				log.Printf("GitHub Token 为空，将以匿名方式访问 %s (可能触发限流) ", url)
+			}
+		}
+
+		// 4. 发送请求（使用当前构建的请求头）
+		resp, err := Client.Get(url, sreq.WithHeaders(reqHeaders)).Text()
 		if err != nil {
 			lastError = fmt.Errorf("尝试源 %s 失败: %v", url, err)
 			log.Println(lastError)
 			continue
 		}
 
+		// 5. 空数据校验
 		if resp == "" {
 			lastError = fmt.Errorf("尝试源 %s 失败: 返回空数据", url)
 			log.Println(lastError)
 			continue
 		}
 
-		// 解析JSON到map
+		// 6. 前置 JSON 格式校验（避免解析时报模糊错误）
+		trimmedResp := strings.TrimSpace(resp)
+		if len(trimmedResp) == 0 || (trimmedResp[0] != '{' && trimmedResp[0] != '[') {
+			errContent := trimmedResp
+			if len(errContent) > 200 {
+				errContent = errContent[:200] + "..."
+			}
+			lastError = fmt.Errorf("尝试源 %s 失败: 返回非JSON内容 [%s]", url, errContent)
+			log.Println(lastError)
+			continue
+		}
+
+		// 7. 解析JSON到map
 		var depotKeys map[string]string
 		if err := json.Unmarshal([]byte(resp), &depotKeys); err != nil {
 			lastError = fmt.Errorf("解析源 %s 的JSON失败: %v", url, err)
@@ -61,7 +104,14 @@ func GetDepotkeys() (map[string]string, error) {
 			continue
 		}
 
-		log.Printf("成功从 %s 获取到 %d 个depotkeys", url, len(depotKeys))
+		// 8. 校验解析结果是否为空（避免空map）
+		if len(depotKeys) == 0 {
+			lastError = fmt.Errorf("尝试源 %s 失败: JSON解析成功但数据为空", url)
+			log.Println(lastError)
+			continue
+		}
+
+		log.Printf("成功从 %s 获取到 %d 个 DepotKeys", url, len(depotKeys))
 		return depotKeys, nil
 	}
 
@@ -71,7 +121,7 @@ func GetDepotkeys() (map[string]string, error) {
 // 获取 Manifests
 func GetManifests(APPID string) (map[string]string, error) {
 	headers := sreq.Headers{
-		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+		"User-Agent": []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
 	}
 
 	resp, err := Client.Get(
@@ -112,7 +162,7 @@ func GetManifests(APPID string) (map[string]string, error) {
 
 	depots, ok := appInfo["depots"].(map[string]interface{})
 	if !ok {
-		return nil, fmt.Errorf("未找到depots数据")
+		return nil, fmt.Errorf("未找到 Depots 数据")
 	}
 
 	depotManifestMap := make(map[string]string)
@@ -141,7 +191,7 @@ func GetManifests(APPID string) (map[string]string, error) {
 func GetDLC(appid string) ([]string, bool, error) {
 	// 设置请求头
 	headers := sreq.Headers{
-		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+		"User-Agent": []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
 	}
 
 	// 构建URL
@@ -162,7 +212,7 @@ func GetDLC(appid string) ([]string, bool, error) {
 	// 获取指定AppID的数据
 	appData, ok := info.Data[appid]
 	if !ok {
-		return nil, false, fmt.Errorf("未找到AppID %s 的信息", appid)
+		return nil, false, fmt.Errorf("未找到 %s 的信息", appid)
 	}
 
 	// 提取所有可能的DLC ID来源
@@ -170,8 +220,7 @@ func GetDLC(appid string) ([]string, bool, error) {
 
 	// 从common.listofdlc中提取
 	if listStr, ok := appData.Common["listofdlc"].(string); ok {
-		re := regexp.MustCompile(`\d+`)
-		matches := re.FindAllString(listStr, -1)
+		matches := digitsRe.FindAllString(listStr, -1)
 		for _, id := range matches {
 			dlcIDs[id] = true
 		}
@@ -179,8 +228,7 @@ func GetDLC(appid string) ([]string, bool, error) {
 
 	// 从extended.listofdlc中提取
 	if listStr, ok := appData.Extended["listofdlc"].(string); ok {
-		re := regexp.MustCompile(`\d+`)
-		matches := re.FindAllString(listStr, -1)
+		matches := digitsRe.FindAllString(listStr, -1)
 		for _, id := range matches {
 			dlcIDs[id] = true
 		}
@@ -243,35 +291,57 @@ func AddDLC(APPID string, addedAppids, existingAppids map[string]bool, luaConten
 	if err != nil {
 		return fmt.Errorf("获取主游戏DLC失败: %v", err)
 	}
+	// 并发筛选无仓库的DLC
+	var (
+		dlcIDs []string
+		mu     sync.Mutex
+		wg     sync.WaitGroup
+		sem    = make(chan struct{}, 8)
+	)
 
-	// 筛选无仓库的DLC
-	var dlcIDs []string
 	for _, dlcID := range mainDLCs {
-		_, hasDepots, err := GetDLC(dlcID)
-		if err != nil {
-			log.Printf("获取DLC %s 信息失败: %v\n", dlcID, err)
-			continue
-		}
+		wg.Add(1)
+		sem <- struct{}{}
+		go func(dlcID string) {
+			defer wg.Done()
+			defer func() { <-sem }()
 
-		if !hasDepots && !existingAppids[dlcID] { // 过滤已存在的DLC
-			dlcIDs = append(dlcIDs, dlcID)
-		}
+			_, hasDepots, err := GetDLC(dlcID)
+			if err != nil {
+				log.Printf("获取DLC %s 信息失败: %v\n", dlcID, err)
+				return
+			}
+
+			if !hasDepots && !existingAppids[dlcID] { // 过滤已存在的DLC
+				mu.Lock()
+				dlcIDs = append(dlcIDs, dlcID)
+				mu.Unlock()
+			}
+		}(dlcID)
 	}
+	wg.Wait()
+
+	// 保证顺序稳定
+	sort.Slice(dlcIDs, func(i, j int) bool {
+		ai, _ := strconv.Atoi(dlcIDs[i])
+		aj, _ := strconv.Atoi(dlcIDs[j])
+		return ai < aj
+	})
 
 	// 添加无仓库DLC
 	addedDlcCount := 0
 	for _, dlcID := range dlcIDs {
 		if !existingAppids[dlcID] && !addedAppids[dlcID] {
 			line := fmt.Sprintf("addappid(%s)", dlcID)
-			luaContent.WriteString(line + "\n") // 指针调用，操作原Builder
+			luaContent.WriteString(line + "\n")
 			addedDlcCount++
 			addedAppids[dlcID] = true
 		}
 	}
 
-	// 如果有现有内容，保留未修改的行
+	// 如果有现有内容，保留未被新加替换的行（使用预编译正则）
 	for _, line := range existingLines {
-		if matches := regexp.MustCompile(`addappid\((\d+)\)`).FindStringSubmatch(line); len(matches) > 1 {
+		if matches := addAppidRe.FindStringSubmatch(line); len(matches) > 1 {
 			appid := matches[1]
 			if !addedAppids[appid] {
 				luaContent.WriteString(line + "\n")
@@ -332,11 +402,21 @@ func GenerateLua(APPID, path string, depotData, manifestData map[string]string) 
 		addedAppids[APPID] = true
 	}
 
-	// 添加Depot
+	// 添加Depot（按排序的 key 确保稳定输出）
 	validDepotCount := 0
+	depotIDs := make([]string, 0, len(manifestData))
 	for depotID := range manifestData {
+		depotIDs = append(depotIDs, depotID)
+	}
+	sort.Slice(depotIDs, func(i, j int) bool {
+		ai, _ := strconv.Atoi(depotIDs[i])
+		aj, _ := strconv.Atoi(depotIDs[j])
+		return ai < aj
+	})
+
+	for _, depotID := range depotIDs {
 		if depotKey, exists := depotData[depotID]; exists && depotKey != "" {
-			if !existingAppids[depotID] { // 避免重复添加已存在的depot
+			if !existingAppids[depotID] {
 				line := fmt.Sprintf("addappid(%s, 1, \"%s\")", depotID, depotKey)
 				luaContent.WriteString(line + "\n")
 				validDepotCount++
@@ -348,6 +428,17 @@ func GenerateLua(APPID, path string, depotData, manifestData map[string]string) 
 	// 获取并添加无仓库的DLC
 	if CONFIG_ADD_DLC {
 		AddDLC(APPID, addedAppids, existingAppids, &luaContent, existingLines)
+	}
+
+	// 添加固定清单设置
+	if CONFIG_SET_MANIFESTID && len(manifestData) > 0 {
+		for _, depotID := range depotIDs {
+			manifestID := manifestData[depotID]
+			if manifestID != "" {
+				line := fmt.Sprintf("setManifestid(%s, \"%s\")", depotID, manifestID)
+				luaContent.WriteString(line + "\n")
+			}
+		}
 	}
 
 	// 保存文件
