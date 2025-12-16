@@ -350,7 +350,9 @@ h4,
 span,
 button,
 input,
-h5 {
+h5,
+h3,
+li {
     color: var(--text-primary) !important;
 }
 

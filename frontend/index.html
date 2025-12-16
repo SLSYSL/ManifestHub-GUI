@@ -29,13 +29,13 @@
           <i class="fas fa-gamepad"></i>
           <span class="nav-text">游戏入库</span>
         </a>
-        <a href="#toolbox" class="nav-item" data-page="toolbox">
+        <!-- <a href="#toolbox" class="nav-item" data-page="toolbox">
           <i class="fa fa-tools"></i>
           <span class="nav-text">其他工具</span>
-        </a>
-        <a href="#messages" class="nav-item" data-page="messages">
-          <i class="fa fa-envelope"></i>
-          <span class="nav-text">消息</span>
+        </a> -->
+        <a href="#about" class="nav-item" data-page="about">
+          <i class="fa fa-info-circle"></i>
+          <span class="nav-text">关于</span>
         </a>
         <a href="#settings" class="nav-item" data-page="settings">
           <i class="fa fa-cogs"></i>
@@ -81,10 +81,161 @@
           </div>
         </div>
 
-        <div class="page page-none fade-animation" id="messages-page">
+        <div class="page page-none fade-animation" id="about-page">
           <div class="card">
-            <h2>消息中心</h2>
-            <p>查看和回复您的消息。</p>
+            <h2 class="text-center">ManifestHub GUI</h2>
+            <span class="text-center">
+              <a href="https://github.com/SLSYSL/ManifestHub-GUI/releases"><img
+                  src="https://img.shields.io/github/release/SLSYSL/ManifestHub-GUI?include_prereleases"
+                  alt="Release Version"></a>
+              <a href="https://github.com/SLSYSL/ManifestHub-GUI/releases"><img
+                  src="https://img.shields.io/github/tag/SLSYSL/ManifestHub-GUI" alt="Release Version"></a>
+              <a href="https://github.com/SLSYSL/ManifestHub-GUI/blob/master/LICENSE"><img
+                  src="https://img.shields.io/github/license/SLSYSL/ManifestHub-GUI" alt="License"></a>
+            </span>
+            <p class="text-center">一个基于 Golang & Wails 开发的提取 Steam 密钥工具</p>
+            <h3>说明</h3>
+            <span>技术栈:</span>
+            <ul>
+              <li>Wails 2.X</li>
+              <li>Go 1.25+</li>
+            </ul>
+            <span>后端依赖库:</span>
+            <ul>
+              <li>Viper 1.21.0</li>
+              <li>Wails 2.11.0</li>
+              <li>sreq 0.9.11</li>
+              <li>sys 0.38.0</li>
+            </ul>
+            <span>支持平台:</span>
+            <ul>
+              <li>Windows 10 1809+</li>
+            </ul>
+            <span>软件数据:</span>
+            <ul>
+              <li>日志文件: <code>%AppData%/ManifestHub GUI/Log</code></li>
+              <li>配置文件: <code>%AppData%/ManifestHub GUI/Config</code></li>
+              <li>缓存文件: <code>%AppData%/程序名.exe</code></li>
+            </ul>
+            <h3>开源协议</h3>
+            <p>本项目基于 <a href="https://github.com/SLSYSL/ManifestHub-GUI/blob/master/LICENSE">MIT License</a> 许可证发行</p>
+          </div>
+          <div class="card">
+            <h2 class="text-center">未来路线</h2>
+            <h3>基础功能完善</h3>
+            <ul class="fa-ul">
+              <li><i class="fa-li fa fa-check-square text-success  "></i>固定清单版本</li>
+              <li><i class="fa-li fa fa-check-square text-success"></i>增加请求延迟</li>
+              <li>
+                <i class="fa-li fa fa-check-square text-success"></i>配置文件
+                <ul class="fa-ul">
+                  <li><i class="fa-li fa fa-check-square text-success"></i>添加配置文件验证</li>
+                  <li><i class="fa-li fa fa-check-square text-success"></i>增加用户界面修改</li>
+                  <li><i class="fa-li fa fa-check-square text-success"></i>扩展配置文件
+                    <ul class="fa-ul">
+                      <li><i class="fa-li fa fa-check-square text-success"></i>GitHub Token</li>
+                      <li><i class="fa-li fa fa-check-square text-success"></i>固定清单版本</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>
+              <li><i class="fa-li fa fa-square text-secondary"></i>报错优化
+                <ul class="fa-ul">
+                  <li><i class="fa-li fa fa-check-square text-success"></i>前端显示完整报错</li>
+                  <li><i class="fa-li fa fa-square text-secondary"></i>简化前端报错</li>
+                </ul>
+              </li>
+              <li><i class="fa-li fa fa-square text-secondary"></i>增加 API
+                <ul class="fa-ul">
+                  <li><i class="fa-li fa fa-check-square text-success"></i>增加热门游戏 API</li>
+                  <li><i class="fa-li fa fa-check-square text-success"></i>增加搜索 API</li>
+                  <li><i class="fa-li fa fa-square text-secondary"></i>添加 APPID 搜索 API</li>
+                </ul>
+              </li>
+              <li><i class="fa-li fa fa-square text-secondary"></i>增加清单库
+                <ul class="fa-ul">
+                  <li><i class="fa-li fa fa-square text-secondary"></i>Sudama 清单库</li>
+                  <li><i class="fa-li fa fa-square text-secondary"></i>Walftech 清单库</li>
+                </ul>
+              </li>
+            </ul>
+            <h3>添加新功能</h3>
+            <ul class="fa-ul">
+              <li><i class="fa-li fa fa-square text-secondary"></i>入库管理器</li>
+              <li><i class="fa-li fa fa-square text-secondary"></i>.lua 文件编写器</li>
+            </ul>
+            <h3>未来大变动</h3>
+            <ul class="fa-ul">
+              <li><i class="fa-li fa fa-square text-secondary"></i>更换网络请求库</li>
+              <li><i class="fa-li fa fa-square text-secondary"></i>Wails 框架升级 (待定)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h2 class="text-center">开发文档</h2>
+            <h3>环境要求</h3>
+            <ul>
+              <li>Node.js 16+</li>
+              <li>Go 1.25+</li>
+            </ul>
+            <h3>准备环境</h3>
+            <ol>
+              <li>安装 Node.js 环境 (已安装请跳过):
+                <ol>
+                  <li>下载并安装 <a href="https://nodejs.org/">Node.js</a></li>
+                  <li>根据提示安装</li>
+                  <li>执行命令 <code>node -v</code></li>
+                  <li>输出 Node.js 版本号则安装成功</li>
+                </ol>
+              </li>
+              <li>安装 Go 环境 (已安装请跳过):
+                <ol>
+                  <li>下载并安装 <a href="https://golang.google.cn/dl/">Go</a></li>
+                  <li>根据提示安装</li>
+                  <li>执行命令 <code>go version</code></li>
+                  <li>输出 Go 版本号则安装成功</li>
+                </ol>
+              </li>
+              <li>拉取代码: 克隆本仓库</li>
+            </ol>
+            <h3>安装依赖</h3>
+            <ul>
+              <li>方法一: 使用 Makefile (需要安装 <a href="https://gnuwin32.sourceforge.net/packages/make.htm">Make</a>)
+                <ol>
+                  <li>在当前项目中执行命令: <code>make install</code></li>
+                </ol>
+              </li>
+              <li>方法二: 使用原生命令
+                <ol>
+                  <li>在当前项目中执行以下命令:
+                    <ol>
+                      <li><code>go mod download</code></li>
+                      <li><code>cd frontend &amp;&amp; npm install</code></li>
+                    </ol>
+                  </li>
+                </ol>
+              </li>
+            </ul>
+            <h3>开发和构建</h3>
+            <ul>
+              <li><code>wails dev</code>: 开发模式</li>
+              <li><code>wails build</code>: 构建程序</li>
+            </ul>
+            <h3>Makefile 说明</h3>
+            <ul>
+              <li><code>install</code>: 安装依赖</li>
+              <li><code>dev</code>: 开发模式</li>
+              <li><code>build</code>: 构建程序</li>
+              <li><code>build-small</code>: 构建最小化程序 (需安装 <a
+                  href="https://github.com/upx/upx/releases/tag/v5.0.2">UPX</a>)</li>
+              <li><code>clean</code>: 清理构建程序</li>
+              <li><code>build~&lt;平台&gt;</code>: 构建指定平台程序 (如果需要查看支持平台请执行<code>list-platforms</code>) (如:
+                build~windows-amd64)</li>
+              <li><code>build-small~&lt;平台&gt;</code>: 构建指定平台最小化程序 (需安装 <a
+                  href="https://github.com/upx/upx/releases/tag/v5.0.2">UPX</a>)
+                (如果需要查看支持平台请执行<code>list-platforms</code>) (如:
+                build-small~windows-amd64)</li>
+            </ul>
           </div>
         </div>
 
