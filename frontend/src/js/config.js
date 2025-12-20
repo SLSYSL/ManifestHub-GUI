@@ -12,22 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadConfig() {
     try {
         const config = await window.go.main.App.GetConfig();
-        console.log('从后端获取的配置:', config); // 调试信息
-        
-        // 确保值正确转换为字符串
         document.getElementById('read-steam-path').value = config.read_steam_path === true ? 'true' : 'false';
         document.getElementById('download-path').value = config.download_path || './Download';
         document.getElementById('add-dlc').value = config.add_dlc === true ? 'true' : 'false';
         document.getElementById('set-manifest').value = config.set_manifestid === true ? 'true' : 'false';
         document.getElementById('github-token').value = config.github_token || '';
-        
-        console.log('设置后的表单值:', { // 调试信息
-            readSteamPath: document.getElementById('read-steam-path').value,
-            downloadPath: document.getElementById('download-path').value,
-            addDLC: document.getElementById('add-dlc').value,
-            setManifest: document.getElementById('set-manifest').value,
-            githubToken: document.getElementById('github-token').value
-        });
+        document.getElementById('library-choice').value = config.library_choice || 'Sudama';
     } catch (error) {
         console.error('加载配置失败:', error.toString());
         showToasts('加载配置失败: ' + error.toString(), "error");
@@ -59,7 +49,8 @@ async function saveConfig() {
             download_path: document.getElementById('download-path').value.trim(),
             add_dlc: document.getElementById('add-dlc').value === 'true',
             set_manifestid: document.getElementById('set-manifest').value === 'true',
-            github_token: document.getElementById('github-token').value.trim()
+            github_token: document.getElementById('github-token').value.trim(),
+            library_choice: document.getElementById('library-choice').value
         };
 
         console.log('要保存的配置:', config); // 调试信息
@@ -95,10 +86,9 @@ async function saveConfig() {
             // 重新加载配置
             await loadConfig();
         } else {
-            showToasts('部分配置保存失败', "error");
+            showToasts('部分配置保存失败, 请重试', "error");
         }
     } catch (error) {
-        console.error('保存配置失败:', error);
         showToasts('保存配置失败: ' + error.toString(), "error");
     } finally {
         // 恢复保存按钮状态

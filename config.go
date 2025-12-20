@@ -16,6 +16,7 @@ type Config struct {
 	AddDLC        bool   `json:"add_dlc"`         // 添加无 DepotKey DLC
 	SetManifestid bool   `json:"set_manifestid"`  // 设置固定清单
 	GithubToken   string `json:"github_token"`    // GitHub 令牌
+	LibraryChoice string `json:"library_choice"`  // 库选择
 }
 
 var DefaultConfig = Config{
@@ -24,6 +25,7 @@ var DefaultConfig = Config{
 	AddDLC:        true,
 	SetManifestid: false,
 	GithubToken:   "",
+	LibraryChoice: "Sudama",
 }
 
 // 创建配置文件
@@ -48,6 +50,7 @@ func CreateConfig() {
 		viper.SetDefault("add_dlc", DefaultConfig.AddDLC)
 		viper.SetDefault("set_manifestid", DefaultConfig.SetManifestid)
 		viper.SetDefault("github_token", DefaultConfig.GithubToken)
+		viper.SetDefault("library_choice", DefaultConfig.LibraryChoice)
 
 		// 写入配置文件（生成 JSON）
 		if err := viper.WriteConfig(); err != nil {
@@ -80,7 +83,14 @@ func ModifyConfig(item string, value interface{}) error {
 
 // 检查配置文件完整性
 func CheckConfigIntegrity() bool {
-	requiredKeys := []string{"read_steam_path", "download_path", "add_dlc", "set_manifestid", "github_token"}
+	requiredKeys := []string{
+		"read_steam_path",
+		"download_path",
+		"add_dlc",
+		"set_manifestid",
+		"github_token",
+		"library_choice",
+	}
 
 	for _, key := range requiredKeys {
 		if !viper.IsSet(key) {
@@ -97,6 +107,8 @@ func ResetConfig() {
 	viper.SetDefault("download_path", DefaultConfig.DownloadPath)
 	viper.SetDefault("add_dlc", DefaultConfig.AddDLC)
 	viper.SetDefault("set_manifestid", DefaultConfig.SetManifestid)
+	viper.SetDefault("github_token", DefaultConfig.GithubToken)
+	viper.SetDefault("library_choice", DefaultConfig.LibraryChoice)
 
 	// 写入配置文件
 	if err := viper.WriteConfig(); err != nil {

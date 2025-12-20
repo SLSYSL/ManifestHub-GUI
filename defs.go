@@ -30,6 +30,7 @@ var (
 	CONFIG_ADD_DLC         bool   // 入库 DLC
 	CONFIG_SET_MANIFESTID  bool   // 设置固定清单
 	CONFIG_GITHUB_TOKEN    string // GitHub 令牌
+	CONFIG_LIBRARY_CHOICE  string // 库选择
 )
 
 func initGlobalConfig() {
@@ -39,6 +40,7 @@ func initGlobalConfig() {
 	CONFIG_ADD_DLC = viper.GetBool("add_dlc")
 	CONFIG_SET_MANIFESTID = viper.GetBool("set_manifestid")
 	CONFIG_GITHUB_TOKEN = viper.GetString("github_token")
+	CONFIG_LIBRARY_CHOICE = viper.GetString("library_choice")
 }
 
 // 自定义 HTTP 客户端

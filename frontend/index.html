@@ -131,10 +131,12 @@
                 <ul class="fa-ul">
                   <li><i class="fa-li fa fa-check-square text-success"></i>添加配置文件验证</li>
                   <li><i class="fa-li fa fa-check-square text-success"></i>增加用户界面修改</li>
-                  <li><i class="fa-li fa fa-check-square text-success"></i>扩展配置文件
+                  <li>
+                    <i class="fa-li fa fa-check-square text-success"></i>扩展配置文件
                     <ul class="fa-ul">
                       <li><i class="fa-li fa fa-check-square text-success"></i>GitHub Token</li>
                       <li><i class="fa-li fa fa-check-square text-success"></i>固定清单版本</li>
+                      <li><i class="fa-li fa fa-check-square text-success"></i>切换清单库</li>
                     </ul>
                   </li>
                 </ul>
@@ -148,14 +150,26 @@
               </li>
               <li><i class="fa-li fa fa-square text-secondary"></i>增加 API
                 <ul class="fa-ul">
-                  <li><i class="fa-li fa fa-check-square text-success"></i>增加热门游戏 API</li>
-                  <li><i class="fa-li fa fa-check-square text-success"></i>增加搜索 API</li>
+                  <li>
+                    <i class="fa-li fa fa-square text-secondary"></i>增加热门游戏 API
+                    <ul class="fa-ul">
+                      <li><i class="fa-li fa fa-check-square text-success"></i>Steam 官方</li>
+                      <li><i class="fa-li fa fa-square text-secondary"></i>第三方</li>
+                    </ul>
+                  </li>
+                  <li>
+                    <i class="fa-li fa fa-square text-secondary"></i>增加搜索 API
+                    <ul class="fa-ul">
+                      <li><i class="fa-li fa fa-check-square text-success"></i>Steam 官方</li>
+                      <li><i class="fa-li fa fa-square text-secondary"></i>第三方</li>
+                    </ul>
+                  </li>
                   <li><i class="fa-li fa fa-square text-secondary"></i>添加 APPID 搜索 API</li>
                 </ul>
               </li>
               <li><i class="fa-li fa fa-square text-secondary"></i>增加清单库
                 <ul class="fa-ul">
-                  <li><i class="fa-li fa fa-square text-secondary"></i>Sudama 清单库</li>
+                  <li><i class="fa-li fa fa-check-square text-success"></i>Sudama 清单库</li>
                   <li><i class="fa-li fa fa-square text-secondary"></i>Walftech 清单库</li>
                 </ul>
               </li>
@@ -165,10 +179,10 @@
               <li><i class="fa-li fa fa-square text-secondary"></i>入库管理器</li>
               <li><i class="fa-li fa fa-square text-secondary"></i>.lua 文件编写器</li>
             </ul>
-            <h3>未来大变动</h3>
+            <h3>未来大变动 (待定)</h3>
             <ul class="fa-ul">
               <li><i class="fa-li fa fa-square text-secondary"></i>更换网络请求库</li>
-              <li><i class="fa-li fa fa-square text-secondary"></i>Wails 框架升级 (待定)</li>
+              <li><i class="fa-li fa fa-square text-secondary"></i>Wails 框架升级</li>
             </ul>
           </div>
           <div class="card">
@@ -279,10 +293,18 @@
             </div>
 
             <div class="row mb-2">
-              <div class="col-md-12">
+              <div class="col-md-6 mb-2">
                 <label class="h5 mb-0" for="github-token">GitHub 访问令牌</label>
                 <p class="text-warning mb-1">用于访问GitHub资源, 避免API限流</p>
                 <input class="form-control" type="text" id="github-token">
+              </div>
+              <div class="col-md-6">
+                <label class="h5 mb-0" for="library-choice">清单库选择</label>
+                <p class="text-warning mb-1">如果不知道选什么默认就好, 否则部分游戏无法入库</p>
+                <select class="form-select" id="library-choice">
+                  <option value="Sudama">Sudama (首选推荐)</option>
+                  <option value="SAC">SAC</option>
+                </select>
               </div>
             </div>
             <button class="app-btn" id="saveConfig"><i class="fa fa-save me-1"></i>保存配置</button>

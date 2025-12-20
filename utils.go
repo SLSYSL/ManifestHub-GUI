@@ -39,8 +39,44 @@ func LogAndError(format string, args ...interface{}) error {
 	return fmt.Errorf(format, args...)
 }
 
-// 获取 DepotKey
-func GetDepotkeys() (map[string]string, error) {
+// SAC 库
+func GetSACDepotkey() (map[string]string, error) {
+	// 构建本地文件路径
+	appData := os.Getenv("APPDATA")
+	if appData == "" {
+		// 如果 APPDATA 环境变量不存在，使用用户主目录
+		userHome, err := os.UserHomeDir()
+		if err != nil {
+			log.Printf("无法获取用户主目录: %v", err)
+		} else {
+			appData = filepath.Join(userHome, "AppData", "Roaming")
+		}
+	}
+
+	localFile := filepath.Join(appData, "ManifestHub GUI", "DepotKeys", "depotkeys.json")
+
+	// 首先尝试读取本地文件
+	if _, err := os.Stat(localFile); err == nil {
+		log.Printf("尝试读取本地缓存文件: %s", localFile)
+
+		data, err := os.ReadFile(localFile)
+		if err != nil {
+			log.Printf("读取本地文件失败: %v", err)
+		} else {
+			// 解析本地 JSON 文件
+			var depotKeys map[string]string
+			if err := json.Unmarshal(data, &depotKeys); err != nil {
+				log.Printf("解析本地 JSON 文件失败: %v", err)
+			} else if len(depotKeys) > 0 {
+				log.Printf("成功从本地缓存读取 %d 个 DepotKeys", len(depotKeys))
+				return depotKeys, nil
+			}
+		}
+	}
+
+	// 本地文件不存在或读取失败，从网络下载
+	log.Printf("本地缓存文件不存在或无效，从网络下载...")
+
 	// 请求头
 	baseHeaders := sreq.Headers{
 		"User-Agent": []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
@@ -69,57 +105,237 @@ func GetDepotkeys() (map[string]string, error) {
 			}
 		}
 
-		// 4. 发送请求（使用当前构建的请求头）
+		// 发送请求（使用当前构建的请求头）
 		resp, err := Client.Get(url, sreq.WithHeaders(reqHeaders)).Text()
 		if err != nil {
-			lastError = fmt.Errorf("尝试源 %s 失败: %v", url, err)
-			log.Println(lastError)
+			lastError = LogAndError("尝试源 %s 失败: %v", url, err)
 			continue
 		}
 
-		// 5. 空数据校验
+		// 空数据校验
 		if resp == "" {
-			lastError = fmt.Errorf("尝试源 %s 失败: 返回空数据", url)
-			log.Println(lastError)
+			lastError = LogAndError("尝试源 %s 失败: 返回空数据", url)
 			continue
 		}
 
-		// 6. 前置 JSON 格式校验（避免解析时报模糊错误）
+		// 前置 JSON 格式校验（避免解析时报模糊错误）
 		trimmedResp := strings.TrimSpace(resp)
 		if len(trimmedResp) == 0 || (trimmedResp[0] != '{' && trimmedResp[0] != '[') {
 			errContent := trimmedResp
 			if len(errContent) > 200 {
 				errContent = errContent[:200] + "..."
 			}
-			lastError = fmt.Errorf("尝试源 %s 失败: 返回非JSON内容 [%s]", url, errContent)
-			log.Println(lastError)
+			lastError = LogAndError("尝试源 %s 失败: 返回非 JSON 内容 [%s]", url, errContent)
 			continue
 		}
 
-		// 7. 解析JSON到map
+		// 解析JSON到map
 		var depotKeys map[string]string
 		if err := json.Unmarshal([]byte(resp), &depotKeys); err != nil {
-			lastError = fmt.Errorf("解析源 %s 的JSON失败: %v", url, err)
-			log.Println(lastError)
+			lastError = LogAndError("解析源 %s 的 JSON 失败: %v", url, err)
 			continue
 		}
 
-		// 8. 校验解析结果是否为空（避免空map）
+		// 校验解析结果是否为空（避免空map）
 		if len(depotKeys) == 0 {
-			lastError = fmt.Errorf("尝试源 %s 失败: JSON解析成功但数据为空", url)
-			log.Println(lastError)
+			lastError = LogAndError("尝试源 %s 失败: JSON 解析成功但数据为空", url)
 			continue
 		}
 
 		log.Printf("成功从 %s 获取到 %d 个 DepotKeys", url, len(depotKeys))
+
+		// 下载成功，保存到本地文件
+		if err := SaveDepotKey(localFile, depotKeys); err != nil {
+			log.Printf("保存 DepotKeys 到本地文件失败: %v", err)
+		} else {
+			log.Printf("已保存 DepotKeys 到本地缓存: %s", localFile)
+		}
+
 		return depotKeys, nil
 	}
 
-	return nil, fmt.Errorf("所有源尝试均失败，最后一个错误: %v", lastError)
+	return nil, fmt.Errorf("所有源尝试均失败, 最后一个错误: %v", lastError)
+}
+
+// Sudama 库
+func GetSudamaDepotkey() (map[string]string, error) {
+	// 构建本地文件路径
+	appData := os.Getenv("APPDATA")
+	if appData == "" {
+		// 如果 APPDATA 环境变量不存在，使用用户主目录
+		userHome, err := os.UserHomeDir()
+		if err != nil {
+			log.Printf("无法获取用户主目录: %v", err)
+		} else {
+			appData = filepath.Join(userHome, "AppData", "Roaming")
+		}
+	}
+
+	localFile := filepath.Join(appData, "ManifestHub GUI", "DepotKeys", "depotkeys.json")
+
+	// 首先尝试读取本地文件
+	if _, err := os.Stat(localFile); err == nil {
+		log.Printf("尝试读取本地缓存文件: %s", localFile)
+
+		data, err := os.ReadFile(localFile)
+		if err != nil {
+			log.Printf("读取本地文件失败: %v", err)
+		} else {
+			// 解析本地 JSON 文件
+			var depotKeys map[string]string
+			if err := json.Unmarshal(data, &depotKeys); err != nil {
+				log.Printf("解析本地 JSON 文件失败: %v", err)
+			} else if len(depotKeys) > 0 {
+				log.Printf("成功从本地缓存读取 %d 个 DepotKeys", len(depotKeys))
+				return depotKeys, nil
+			}
+		}
+	}
+
+	// 本地文件不存在或读取失败，从网络下载
+	log.Printf("本地缓存文件不存在或无效，从网络下载 Sudama 库数据...")
+	return DownloadSudamaDepotKey(localFile)
+}
+
+// Sudama 库下载 DepotKeys
+func DownloadSudamaDepotKey(localFile string) (map[string]string, error) {
+	// Sudama API 基础 URL
+	baseURL := "https://api.993499094.xyz"
+
+	// 请求头
+	headers := sreq.Headers{
+		"User-Agent": []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
+	}
+
+	log.Printf("正在连接服务器获取最新数据...")
+
+	// 获取元数据（总页数）
+	metaURL := baseURL + "/api/status"
+	resp, err := Client.Get(metaURL, sreq.WithHeaders(headers)).Text()
+	if err != nil {
+		return nil, LogAndError("获取元数据失败: %v", err)
+	}
+
+	// 解析元数据
+	var meta map[string]interface{}
+	if err := json.Unmarshal([]byte(resp), &meta); err != nil {
+		return nil, LogAndError("解析元数据失败: %v", err)
+	}
+
+	// 获取总页数
+	totalPages, ok := meta["total_pages"]
+	if !ok {
+		return nil, LogAndError("元数据中缺少 total_pages 字段")
+	}
+
+	// 转换总页数为整数
+	var pages int
+	switch v := totalPages.(type) {
+	case float64:
+		pages = int(v)
+	case int:
+		pages = v
+	default:
+		return nil, LogAndError("total_pages 字段类型无效: %T", totalPages)
+	}
+
+	log.Printf("发现总页数: %d", pages)
+
+	// 分页获取所有数据
+	allKeys := make(map[string]string)
+
+	// 使用并发提高获取速度
+	var mu sync.Mutex
+	var wg sync.WaitGroup
+	sem := make(chan struct{}, 4) // 限制并发数
+
+	for page := 0; page < pages; page++ {
+		wg.Add(1)
+		sem <- struct{}{}
+
+		go func(pageNum int) {
+			defer wg.Done()
+			defer func() { <-sem }()
+
+			pageURL := fmt.Sprintf("%s/api/fetch?page=%d", baseURL, pageNum)
+			resp, err := Client.Get(pageURL, sreq.WithHeaders(headers)).Text()
+			if err != nil {
+				log.Printf("获取第 %d 页失败: %v", pageNum, err)
+				return
+			}
+
+			// 解析页面数据
+			var pageData map[string]string
+			if err := json.Unmarshal([]byte(resp), &pageData); err != nil {
+				log.Printf("解析第 %d 页数据失败: %v", pageNum, err)
+				return
+			}
+
+			// 合并数据
+			mu.Lock()
+			for key, value := range pageData {
+				allKeys[key] = value
+			}
+			mu.Unlock()
+
+			log.Printf("第 %d 页: 获取 %d 个密钥", pageNum, len(pageData))
+		}(page)
+	}
+
+	wg.Wait()
+
+	// 检查是否获取到数据
+	if len(allKeys) == 0 {
+		return nil, LogAndError("从服务器获取到的数据为空")
+	}
+
+	log.Printf("云端共获取 %d 个密钥", len(allKeys))
+
+	// 下载成功，保存到本地文件
+	if err := SaveDepotKey(localFile, allKeys); err != nil {
+		log.Printf("保存 DepotKeys 到本地文件失败: %v", err)
+		// 即使保存失败，也返回成功获取的数据
+	} else {
+		log.Printf("已保存 DepotKeys 到本地缓存: %s", localFile)
+	}
+
+	return allKeys, nil
+}
+
+// 保存 DepotKeys 到本地文件
+func SaveDepotKey(path string, depotKeys map[string]string) error {
+	// 创建目录
+	dir := filepath.Dir(path)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("创建目录失败: %v", err)
+	}
+
+	// 转换为 JSON
+	data, err := json.MarshalIndent(depotKeys, "", "  ")
+	if err != nil {
+		return fmt.Errorf("JSON 序列化失败: %v", err)
+	}
+
+	// 写入文件
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf("写入文件失败: %v", err)
+	}
+
+	return nil
+}
+
+// 获取 DepotKey
+func GetDepotkeys() (map[string]string, error) {
+	// 根据库选择调用不同的获取函数
+	if CONFIG_LIBRARY_CHOICE == "Sudama" {
+		return GetSudamaDepotkey()
+	}
+	return GetSACDepotkey()
 }
 
 // 获取 Manifests
 func GetManifests(APPID string) (map[string]string, error) {
+	// 请求头
 	headers := sreq.Headers{
 		"User-Agent": []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
 	}
@@ -130,39 +346,39 @@ func GetManifests(APPID string) (map[string]string, error) {
 	).Text()
 
 	if err != nil {
-		return nil, LogAndError("搜索Steam游戏失败: %v", err)
+		return nil, LogAndError("搜索 Steam 游戏失败: %v", err)
 	}
 
 	// 解析JSON
 	var result map[string]interface{}
 	if err := json.Unmarshal([]byte(resp), &result); err != nil {
-		return nil, fmt.Errorf("解析JSON失败: %v", err)
+		return nil, LogAndError("解析 JSON 失败: %v", err)
 	}
 
 	// 检查API状态
 	if status, ok := result["status"].(string); !ok || status != "success" {
-		return nil, fmt.Errorf("API请求失败: %v", result)
+		return nil, LogAndError("API 请求失败: %v", result)
 	}
 
 	// 获取指定APPID的数据
 	data, ok := result["data"].(map[string]interface{})
 	if !ok {
-		return nil, fmt.Errorf("数据格式错误: 缺少data字段")
+		return nil, LogAndError("数据格式错误: 缺少 Data 字段")
 	}
 
 	appData, exists := data[APPID]
 	if !exists {
-		return nil, fmt.Errorf("未找到APPID: %s", APPID)
+		return nil, LogAndError("未找到APPID: %s", APPID)
 	}
 
 	appInfo, ok := appData.(map[string]interface{})
 	if !ok {
-		return nil, fmt.Errorf("App数据格式错误")
+		return nil, LogAndError("App数据格式错误")
 	}
 
 	depots, ok := appInfo["depots"].(map[string]interface{})
 	if !ok {
-		return nil, fmt.Errorf("未找到 Depots 数据")
+		return nil, LogAndError("未找到 Depots 数据")
 	}
 
 	depotManifestMap := make(map[string]string)
@@ -500,7 +716,7 @@ func GetSteamGamePath() (string, error) {
 	}
 
 	if installPath == "" {
-		return "", fmt.Errorf("未找到Steam安装路径(注册表读取失败): %w", lastErr)
+		return "", fmt.Errorf("未找到 Steam 安装路径(注册表读取失败): %w", lastErr)
 	}
 
 	fullPath := filepath.Join(append([]string{installPath}, "config", "stplug-in")...)

@@ -6,6 +6,7 @@ export namespace main {
 	    add_dlc: boolean;
 	    set_manifestid: boolean;
 	    github_token: string;
+	    library_choice: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Config(source);
@@ -18,6 +19,7 @@ export namespace main {
 	        this.add_dlc = source["add_dlc"];
 	        this.set_manifestid = source["set_manifestid"];
 	        this.github_token = source["github_token"];
+	        this.library_choice = source["library_choice"];
 	    }
 	}
 
