@@ -1,3 +1,4 @@
+![Manifest GUI](https://socialify.git.ci/SLSYSL/ManifestHub-GUI/image?forks=1&issues=1&language=1&name=1&owner=1&pulls=1&stargazers=1&theme=Auto)
 <h1 align="center">ManifestHub GUI</h1>
 
 <p align="center">
