@@ -47,4 +47,4 @@ func initGlobalConfig() {
 var Client *sreq.Client
 
 // 版本号
-var version = "v0.1.0-beta.4"
+var version = "v0.1.0-beta.5"

@@ -1,0 +1,110 @@
+/* 页面切换动画 */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page {
+    animation: slideIn 0.5s ease;
+}
+
+/* 缩小动画 */
+.fade-animation {
+    animation: fadeInScale 0.5s ease;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 下雪 */
+@keyframes fall {
+    0% {
+        transform: translateY(-10px) translateX(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(60vh) translateX(var(--h)) scale(1.05);
+    }
+
+    100% {
+        transform: translateY(100vh) translateX(var(--h)) scale(0.9);
+    }
+}
+
+/* 超链接动画 */
+@-webkit-keyframes link-glow {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+@keyframes link-glow {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+a:not(.nav-item):hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+    background-size: 200% auto;
+    -webkit-animation: link-glow 1.5s linear infinite;
+    animation: link-glow 1.5s linear infinite;
+}
+
+/* Toasts 动画 */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.toasts-fade-in {
+    animation: slideInRight 0.3s ease forwards;
+}
+
+.toasts-fade-out {
+    animation: slideOutRight 0.3s ease forwards;
+}

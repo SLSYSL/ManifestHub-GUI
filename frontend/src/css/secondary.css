@@ -1,41 +1,5 @@
 /* ./src/css/secondary.css */
-.fade-animation {
-    animation: fadeInScale 0.5s ease-in-out;
-}
-
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
 /* 超链接优化 */
-@-webkit-keyframes link-glow {
-    0% {
-        background-position: 100% 0;
-    }
-
-    100% {
-        background-position: -100% 0;
-    }
-}
-
-@keyframes link-glow {
-    0% {
-        background-position: 100% 0;
-    }
-
-    100% {
-        background-position: -100% 0;
-    }
-}
-
 a:not(.nav-item) {
     position: relative;
     color: #60a5fa;
@@ -65,29 +29,6 @@ a:not(.nav-item)::before {
 a:not(.nav-item):hover {
     color: #7ebdd8 !important;
     text-shadow: 0 0 8px rgba(0, 102, 255, 0.2);
-}
-
-a:not(.nav-item):hover::before {
-    transform: scaleX(1);
-    transform-origin: left;
-    background-size: 200% auto;
-    -webkit-animation: link-glow 1.5s linear infinite;
-    animation: link-glow 1.5s linear infinite;
-}
-
-/* 下雪 */
-@keyframes fall {
-    0% {
-        transform: translateY(-10px) translateX(0) scale(1);
-    }
-
-    50% {
-        transform: translateY(60vh) translateX(var(--h)) scale(1.05);
-    }
-
-    100% {
-        transform: translateY(100vh) translateX(var(--h)) scale(0.9);
-    }
 }
 
 .snow {
@@ -151,30 +92,6 @@ a:not(.nav-item):hover::before {
     color: var(--text-primary);
 }
 
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slideOutRight {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-
-    to {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-}
-
 .toasts-container {
     position: fixed;
     top: 20px;
@@ -191,12 +108,4 @@ a:not(.nav-item):hover::before {
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-}
-
-.toasts-fade-in {
-    animation: slideInRight 0.3s ease forwards;
-}
-
-.toasts-fade-out {
-    animation: slideOutRight 0.3s ease forwards;
 }

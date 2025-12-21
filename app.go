@@ -52,7 +52,7 @@ func (a *App) AddGameToLibrary(APPID string) (string, error) {
 	// 并行获取depotkeys
 	go func() {
 		defer wg.Done()
-		depotkeys, err1 = GetDepotkeys()
+		depotkeys, err1 = GetDepotkeys(false)
 	}()
 	// 并行获取manifests
 	go func() {
@@ -69,6 +69,42 @@ func (a *App) AddGameToLibrary(APPID string) (string, error) {
 		return "", LogAndError("获取 Manifests 失败: %v", err2)
 	}
 
+	// 收集当前游戏所需的所有密钥ID（主游戏APPID + 所有DepotID）
+	requiredIDs := []string{APPID}
+	for depotID := range manifests {
+		requiredIDs = append(requiredIDs, depotID)
+	}
+
+	// 检查是否有缺失的密钥
+	checkMissing := func(keys map[string]string) bool {
+		for _, id := range requiredIDs {
+			if _, exists := keys[id]; !exists {
+				return true
+			}
+		}
+		return false
+	}
+
+	// 若存在缺失，尝试重新下载 Depotkeys
+	var isMissing = false
+	if checkMissing(depotkeys) {
+		log.Println("发现缺失的 DepotKey, 尝试重新下载...")
+		newDepotkeys, err := GetDepotkeys(true) // 重新下载
+		if err != nil {
+			log.Printf("重新下载 DepotKey 失败: %v, 将使用现有密钥继续", err)
+		} else {
+			depotkeys = newDepotkeys
+			// 再次检查是否仍有缺失
+			if checkMissing(depotkeys) {
+				log.Printf("警告: 重新下载后仍缺失部分 DepotKey, 将继续生成Lua文件")
+				isMissing = true
+			} else {
+				log.Println("重新下载后, 缺失的 DepotKey 已获取")
+			}
+		}
+	}
+
+	// 生成 Lua 文件
 	var path string
 	var err error
 
@@ -89,6 +125,9 @@ func (a *App) AddGameToLibrary(APPID string) (string, error) {
 		return "", LogAndError("生成 Lua 文件失败: %v", err)
 	}
 
+	if isMissing {
+		return fmt.Sprintf("游戏 %s 已成功添加到库中, 但是缺少部分 DepotKey (可能导致空包)", APPID), nil
+	}
 	return fmt.Sprintf("游戏 %s 已成功添加到库中", APPID), nil
 }
 
@@ -124,6 +163,7 @@ func (a *App) GetConfig() (Config, error) {
 		AddDLC:        CONFIG_ADD_DLC,
 		SetManifestid: CONFIG_SET_MANIFESTID,
 		GithubToken:   CONFIG_GITHUB_TOKEN,
+		LibraryChoice: CONFIG_LIBRARY_CHOICE,
 	}, nil
 }
 

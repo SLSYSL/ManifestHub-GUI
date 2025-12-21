@@ -1,4 +1,4 @@
-/* ./src/js/important.js */
+/* ./src/js/app.js */
 document.addEventListener('DOMContentLoaded', function () {
     // 获取DOM元素
     const searchInput = document.getElementById('home-steam-search');
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
             gameElement.innerHTML = `
             <div class="game-info flex-row justify-content-between align-items-center card">
                 <div class="d-flex align-items-center">
-                    <img src="${imageSrc}" class="me-3" style="width: 235px; height: 95px; object-fit: cover; border-radius: 5px;">
+                    <img src="${imageSrc}" class="card-img me-3">
                     <div>
                         <div class="fw-bold">${gameName}</div>
                         <span class="small">AppID: ${appId}</span>

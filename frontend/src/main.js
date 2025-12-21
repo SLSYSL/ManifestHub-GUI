@@ -9,9 +9,9 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 // 导入自定义样式表
 import './css/theme.css';
-import './css/important.css';
+import './css/app.css';
+import './css/animation.css';
 import './css/secondary.css';
-// import './css/spirit.css';
 
 // 导入主应用组件
 import './js/app.js';

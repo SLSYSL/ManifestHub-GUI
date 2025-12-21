@@ -23,10 +23,7 @@ var logFile *os.File
 // 创建日志文件
 func CreateLog() {
 	// 获取 %AppData%
-	logDir, err := os.UserConfigDir()
-	if err != nil {
-		logDir = "."
-	}
+	logDir := GetAppData()
 
 	// 拼接绝对路径
 	logPath := filepath.Join(logDir, "ManifestHub GUI", "Log", "ManifestHub.log")
@@ -55,6 +52,7 @@ func CreateLog() {
 	}
 
 	// 创建日志文件
+	var err error
 	logFile, err = os.OpenFile(
 		logPath,
 		fileFlags,
@@ -74,7 +72,7 @@ func CreateLog() {
 
 func init() {
 	// 初始化自定义 HTTP 客户端
-	Client = sreq.New().SetTimeout(10 * time.Second)
+	Client = sreq.New().SetTimeout(30 * time.Second)
 
 	// 在 init 中注册全局 defer，确保程序退出时关闭文件
 	defer func() {

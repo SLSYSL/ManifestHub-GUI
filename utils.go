@@ -39,21 +39,34 @@ func LogAndError(format string, args ...interface{}) error {
 	return fmt.Errorf(format, args...)
 }
 
-// SAC 库
-func GetSACDepotkey() (map[string]string, error) {
-	// 构建本地文件路径
-	appData := os.Getenv("APPDATA")
-	if appData == "" {
-		// 如果 APPDATA 环境变量不存在，使用用户主目录
+// 获取 %AppData%
+func GetAppData() string {
+	// 获取环境变量
+	AppData := os.Getenv("APPDATA")
+
+	// 不存在获取用户主目录
+	if AppData == "" {
 		userHome, err := os.UserHomeDir()
 		if err != nil {
 			log.Printf("无法获取用户主目录: %v", err)
+			return "."
 		} else {
-			appData = filepath.Join(userHome, "AppData", "Roaming")
+			AppData = filepath.Join(userHome, "AppData", "Roaming")
 		}
 	}
 
-	localFile := filepath.Join(appData, "ManifestHub GUI", "DepotKeys", "depotkeys.json")
+	return AppData
+}
+
+// SAC 库
+func GetSACDepotkey(redownload bool) (map[string]string, error) {
+	// 构建本地文件路径
+	AppData := GetAppData()
+	localFile := filepath.Join(AppData, "ManifestHub GUI", "DepotKeys", "depotkeys.json")
+
+	if redownload {
+		return DownloadSACDepotKey(localFile)
+	}
 
 	// 首先尝试读取本地文件
 	if _, err := os.Stat(localFile); err == nil {
@@ -76,7 +89,11 @@ func GetSACDepotkey() (map[string]string, error) {
 
 	// 本地文件不存在或读取失败，从网络下载
 	log.Printf("本地缓存文件不存在或无效，从网络下载...")
+	return DownloadSACDepotKey(localFile)
+}
 
+// SAC 库下载 DepotKeys
+func DownloadSACDepotKey(localFile string) (map[string]string, error) {
 	// 请求头
 	baseHeaders := sreq.Headers{
 		"User-Agent": []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
@@ -158,20 +175,14 @@ func GetSACDepotkey() (map[string]string, error) {
 }
 
 // Sudama 库
-func GetSudamaDepotkey() (map[string]string, error) {
+func GetSudamaDepotkey(redownload bool) (map[string]string, error) {
 	// 构建本地文件路径
-	appData := os.Getenv("APPDATA")
-	if appData == "" {
-		// 如果 APPDATA 环境变量不存在，使用用户主目录
-		userHome, err := os.UserHomeDir()
-		if err != nil {
-			log.Printf("无法获取用户主目录: %v", err)
-		} else {
-			appData = filepath.Join(userHome, "AppData", "Roaming")
-		}
-	}
+	AppData := GetAppData()
+	localFile := filepath.Join(AppData, "ManifestHub GUI", "DepotKeys", "depotkeys.json")
 
-	localFile := filepath.Join(appData, "ManifestHub GUI", "DepotKeys", "depotkeys.json")
+	if redownload {
+		return DownloadSudamaDepotKey(localFile)
+	}
 
 	// 首先尝试读取本地文件
 	if _, err := os.Stat(localFile); err == nil {
@@ -325,12 +336,12 @@ func SaveDepotKey(path string, depotKeys map[string]string) error {
 }
 
 // 获取 DepotKey
-func GetDepotkeys() (map[string]string, error) {
+func GetDepotkeys(redownload bool) (map[string]string, error) {
 	// 根据库选择调用不同的获取函数
 	if CONFIG_LIBRARY_CHOICE == "Sudama" {
-		return GetSudamaDepotkey()
+		return GetSudamaDepotkey(redownload)
 	}
-	return GetSACDepotkey()
+	return GetSACDepotkey(redownload)
 }
 
 // 获取 Manifests

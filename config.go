@@ -30,8 +30,11 @@ var DefaultConfig = Config{
 
 // 创建配置文件
 func CreateConfig() {
+	// 获取%AppData%
+	AppData := GetAppData()
+
 	// 设置配置文件绝对路径
-	configDir := filepath.Join(os.Getenv("APPDATA"), "ManifestHub GUI", "Config")
+	configDir := filepath.Join(AppData, "ManifestHub GUI", "Config")
 	configPath := filepath.Join(configDir, "config.json")
 
 	// 创建目录

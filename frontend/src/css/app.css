@@ -203,10 +203,6 @@ body {
     overflow-y: auto;
 }
 
-.page {
-    animation: fade-in 0.5s ease;
-}
-
 /* 卡片元素 */
 .card {
     background-color: var(--card-bg);
@@ -233,7 +229,7 @@ body {
 select.form-select,
 input.form-control[type="text"],
 input.form-control[type="text"]:focus {
-    height: 40px;
+    height: 38px;
     color: var(--text-primary) !important;
     background-color: var(--btn-bg) !important;
     border: 1px solid var(--border) !important;
@@ -260,16 +256,17 @@ input.form-control[type="text"]:not(:placeholder-shown)+.custom-placeholder {
     opacity: 0 !important;
 }
 
+/* 游戏详情信息 */
+.card-img {
+    width: 235px;
+    height: 95px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
 /* checkbox 光标样式 */
 input[type="checkbox"] {
     cursor: pointer;
-}
-
-.music-span {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    justify-content: center;
 }
 
 /* 隐藏页面 */
@@ -302,41 +299,6 @@ input[type="checkbox"] {
 .app-btn:hover {
     background-color: var(--btn-hover-bg);
     transform: scale(0.95);
-}
-
-/* 添加动画效果 */
-.nav-item,
-.nav-btn {
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 页面切换动画 */
-.page {
-    animation: slideIn 0.5s ease-in-out;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 h2 {
