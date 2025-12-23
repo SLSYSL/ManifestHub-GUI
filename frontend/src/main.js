@@ -14,7 +14,7 @@ import './css/animation.css';
 import './css/secondary.css';
 
 // 导入主应用组件
+import './js/config.js';
 import './js/app.js';
 import './js/secondary.js';
 import './js/utils.js';
-import './js/config.js';

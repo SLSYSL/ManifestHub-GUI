@@ -43,8 +43,14 @@ func initGlobalConfig() {
 	CONFIG_LIBRARY_CHOICE = viper.GetString("library_choice")
 }
 
+// %AppData% 路径
+var _AppData_ string
+
+// %AppData%/MnaifestHub GUI 路径
+var _MainConfig_ string
+
 // 自定义 HTTP 客户端
 var Client *sreq.Client
 
 // 版本号
-var version = "v0.1.0-beta.5"
+var version = "v0.1.0-beta.6"

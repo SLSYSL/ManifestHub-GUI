@@ -20,12 +20,12 @@ build~%:
 
 .PHONY: build-small
 build-small:
-	wails build -clean -ldflags="-w -s" -upx -upxflags="--best --lzma"
+	wails build -webview2 embed -clean -ldflags="-w -s" -upx -upxflags="--best --lzma"
 
 
 .PHONY: build-small~%
 build-small~%:
-	wails build -platform $(subst -,/,$*) -clean -ldflags="-w -s" -upx -upxflags="--best --lzma"
+	wails build -webview2 embed -platform $(subst -,/,$*) -clean -ldflags="-w -s" -upx -upxflags="--best --lzma"
 
 
 .PHONY: list-platforms

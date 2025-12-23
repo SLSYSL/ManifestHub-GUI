@@ -22,25 +22,22 @@ var logFile *os.File
 
 // 创建日志文件
 func CreateLog() {
-	// 获取 %AppData%
-	logDir := GetAppData()
-
 	// 拼接绝对路径
-	logPath := filepath.Join(logDir, "ManifestHub GUI", "Log", "ManifestHub.log")
+	logPath := filepath.Join(_MainConfig_, "Log", "ManifestHub.log")
 
 	// 创建日志目录
 	if err := os.MkdirAll(filepath.Dir(logPath), 0755); err != nil {
-		log.Fatalf("创建日志目录失败: %v", err)
+		log.Printf("创建日志目录失败: %v", err)
 	}
 
 	// 检查日志文件大小
 	var fileFlags int
-	const maxSize = 5 * 1024 * 1024
+	const maxSize = 2 * 1024 * 1024
 	if info, err := os.Stat(logPath); err == nil {
 		// 文件存在，检查大小
 		if info.Size() >= maxSize {
 			// 超过 5MB 清空
-			log.Printf("日志文件超过5MB, 将清空日志")
+			log.Printf("日志文件超过2MB, 将清空日志")
 			fileFlags = os.O_CREATE | os.O_WRONLY | os.O_TRUNC
 		} else {
 			// 未超过追加模式
@@ -59,7 +56,7 @@ func CreateLog() {
 		0644,
 	)
 	if err != nil {
-		log.Fatalf("创建日志文件失败: %v", err)
+		log.Printf("创建日志文件失败: %v", err)
 	}
 
 	// 配置 log
@@ -70,11 +67,18 @@ func CreateLog() {
 	log.Printf("日志初始化成功, 文件路径:%s", logPath)
 }
 
+// 全局注册
 func init() {
 	// 初始化自定义 HTTP 客户端
 	Client = sreq.New().SetTimeout(30 * time.Second)
 
-	// 在 init 中注册全局 defer，确保程序退出时关闭文件
+	// 获取 %AppData% 路径
+	_AppData_ = GetAppData()
+
+	// 获取 ManifestHub GUI 文件夹
+	_MainConfig_ = filepath.Join(_AppData_, "ManifestHub GUI")
+
+	// 注册全局 defer, 确保程序退出时关闭文件
 	defer func() {
 		if logFile != nil {
 			log.Println("程序退出，关闭日志文件")
@@ -101,8 +105,9 @@ func main() {
 	// 创建带选项的应用程序
 	err := wails.Run(&options.App{
 		Title:            fmt.Sprintf("ManifestHub - %s", version),
-		Width:            1536,
-		Height:           1152,
+		Width:            1382,
+		Height:           1037,
+		Frameless:        false,
 		WindowStartState: options.Normal,
 		Windows: &windows.Options{
 			WebviewIsTransparent:              true, // WebView 透明

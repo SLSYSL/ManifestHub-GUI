@@ -33,13 +33,13 @@
           <i class="fa fa-tools"></i>
           <span class="nav-text">其他工具</span>
         </a> -->
+        <a href="#settings" class="nav-item" data-page="settings">
+          <i class="fa fa-cog"></i>
+          <span class="nav-text">设置</span>
+        </a>
         <a href="#about" class="nav-item" data-page="about">
           <i class="fa fa-info-circle"></i>
           <span class="nav-text">关于</span>
-        </a>
-        <a href="#settings" class="nav-item" data-page="settings">
-          <i class="fa fa-cogs"></i>
-          <span class="nav-text">设置</span>
         </a>
       </nav>
     </aside>
@@ -50,6 +50,7 @@
       <header class="top-bar">
         <span class="title" id="page-title"><i class="fa fa-home me-2"></i>游戏入库</span>
         <div class="link-center">
+          <span>赞助: <a href="#" data-bs-toggle="modal" data-bs-target="#donate-wx">微信</a></span>
           <span>友情链接:</span>
           <a href="https://store.steampowered.com/" target="_blank" rel="noopener noreferrer">Steam</a>
           <a href="https://steamtools.net/" target="_blank" rel="noopener noreferrer">SteamTools</a>
@@ -61,7 +62,7 @@
       <div class="page-content">
         <div class="page" id="home-page">
           <!-- 搜索框 -->
-          <div class="home-search">
+          <div class="home-search" autocomplete="off">
             <div class="input-wrapper">
               <input id="home-steam-search" type="text" class="form-control" placeholder=" ">
               <label for="home-steam-search" class="custom-placeholder">搜索游戏名 (仅国区游戏)</label>
@@ -410,7 +411,34 @@
           </div>
         </div>
       </div>
+      <div class="progress d-none" id="mainProgress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
     </main>
+
+    <div class="modal fade" id="donate-wx">
+      <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+
+          <!-- 模态框头部 -->
+          <div class="modal-header">
+            <h4 class="modal-title">微信赞助</h4>
+            <button class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+          </div>
+
+          <!-- 模态框内容 -->
+          <div class="modal-body text-center">
+            <img src="./donate.jpg" alt="赞助页面">
+          </div>
+
+          <!-- 模态框底部 -->
+          <div class="modal-footer">
+            <button class="app-btn" data-bs-dismiss="modal">关闭</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- 导入 Vite 入口模块 -->

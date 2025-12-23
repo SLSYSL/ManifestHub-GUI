@@ -110,13 +110,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="d-flex align-items-center">
                     <img src="${imageSrc}" class="card-img me-3">
                     <div>
-                        <div class="fw-bold">${gameName}</div>
+                        <div class="fw-bold"><a href="https://store.steampowered.com/app/${appId}/" target="_blank" rel="noopener noreferrer">${gameName}</a></div>
                         <span class="small">AppID: ${appId}</span>
                         <div>${priceInfo}</div>
-                        <a href="https://store.steampowered.com/app/${appId}/" target="_blank" rel="noopener noreferrer">Steam 商店链接</a>
                     </div>
                 </div>
-                <button class="app-btn add-to-library-btn" data-appid="${appId}">入库</button>
+                <button class="app-btn add-to-library-btn" data-appid="${appId}"><i class="fa fa-download me-1"></i>入库</button>
             </div>`;
             fragment.appendChild(gameElement);
         }
@@ -125,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
         featuredGamesContainer.appendChild(fragment);
 
         // 处理入库按钮点击
+        // 改造入库按钮点击事件
         featuredGamesContainer.addEventListener('click', async function (event) {
             const btn = event.target.closest('.add-to-library-btn');
             if (btn.dataset.loading === 'true') return;
@@ -132,20 +132,24 @@ document.addEventListener('DOMContentLoaded', function () {
             const appID = btn.getAttribute('data-appid');
             const originalText = btn.textContent.trim();
             btn.dataset.loading = 'true';
-            btn.textContent = '正在入库...';
+            btn.textContent = '处理中...';
             btn.disabled = true;
 
             try {
-                if (!window.go?.main?.App?.AddGameToLibrary) throw new Error('Wails入库函数未正确加载');
+                // 显示进度条（初始0%）
+                updateProgress(0);
+
+                // 进度回调
                 const result = await window.go.main.App.AddGameToLibrary(appID);
+                updateProgress(100); // 完成后强制100%
                 showToasts(result, 'success');
             } catch (error) {
                 showToasts(error.toString(), 'error');
+                hideProgress(); // 出错时隐藏
             } finally {
                 btn.textContent = originalText;
                 btn.disabled = false;
                 btn.dataset.loading = 'false';
-                btn.classList.remove('disabled');
             }
         });
     }

@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"sync"
 
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"github.com/winterssy/sreq"
 )
 
@@ -48,6 +49,8 @@ func (a *App) AddGameToLibrary(APPID string) (string, error) {
 		wg         sync.WaitGroup
 	)
 
+	runtime.EventsEmit(a.ctx, "progress", 10)
+
 	wg.Add(2)
 	// 并行获取depotkeys
 	go func() {
@@ -69,6 +72,8 @@ func (a *App) AddGameToLibrary(APPID string) (string, error) {
 		return "", LogAndError("获取 Manifests 失败: %v", err2)
 	}
 
+	runtime.EventsEmit(a.ctx, "progress", 20)
+
 	// 收集当前游戏所需的所有密钥ID（主游戏APPID + 所有DepotID）
 	requiredIDs := []string{APPID}
 	for depotID := range manifests {
@@ -84,6 +89,8 @@ func (a *App) AddGameToLibrary(APPID string) (string, error) {
 		}
 		return false
 	}
+
+	runtime.EventsEmit(a.ctx, "progress", 40)
 
 	// 若存在缺失，尝试重新下载 Depotkeys
 	var isMissing = false
@@ -104,6 +111,8 @@ func (a *App) AddGameToLibrary(APPID string) (string, error) {
 		}
 	}
 
+	runtime.EventsEmit(a.ctx, "progress", 50)
+
 	// 生成 Lua 文件
 	var path string
 	var err error
@@ -120,10 +129,14 @@ func (a *App) AddGameToLibrary(APPID string) (string, error) {
 		err = nil
 	}
 
+	runtime.EventsEmit(a.ctx, "progress", 70)
+
 	err = GenerateLua(APPID, path, depotkeys, manifests)
 	if err != nil {
 		return "", LogAndError("生成 Lua 文件失败: %v", err)
 	}
+
+	runtime.EventsEmit(a.ctx, "progress", 100)
 
 	if isMissing {
 		return fmt.Sprintf("游戏 %s 已成功添加到库中, 但是缺少部分 DepotKey (可能导致空包)", APPID), nil
@@ -167,6 +180,7 @@ func (a *App) GetConfig() (Config, error) {
 	}, nil
 }
 
+// 修改配置文件
 func (a *App) ModifyConfig(item string, value interface{}) error {
 	// 调用配置修改函数
 	err := ModifyConfig(item, value)

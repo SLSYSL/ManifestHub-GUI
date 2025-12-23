@@ -21,6 +21,11 @@ body {
     overflow-x: hidden;
 }
 
+select option {
+  background-color: var(--background-color) !important;
+  color: var(--text-primary);
+}
+
 /* 主容器 */
 .app-container {
     transition: background-color 0.4s ease, color 0.4s ease;
@@ -282,6 +287,31 @@ input[type="checkbox"] {
     max-height: 0;
     -moz-user-select: none;
     user-select: none;
+}
+
+/* 进度条主题适配 */
+.progress {
+  height: 6px;
+  background-color: var(--btn-bg);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 10px 0;
+  box-shadow: none;
+}
+
+.progress-bar {
+  background-color: var(--primary-color);
+  transition: width 0.3s ease; /* 平滑过渡动画 */
+}
+
+/* 进度条加载动画（可选）*/
+.progress-bar-animated {
+  animation: progress-shimmer 1.5s infinite;
+}
+
+@keyframes progress-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 /* 按钮元素 */

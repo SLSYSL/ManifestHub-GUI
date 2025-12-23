@@ -82,9 +82,11 @@
         function setDarkMode(enable) {
             if (enable) {
                 document.documentElement.setAttribute('dark-mode', '');
+                document.documentElement.setAttribute('data-bs-theme', 'dark');
                 localStorage.setItem('dark-mode', 'true');
             } else {
                 document.documentElement.removeAttribute('dark-mode');
+                document.documentElement.setAttribute('data-bs-theme', 'light');
                 localStorage.setItem('dark-mode', 'false');
             }
             if (darkToggle) darkToggle.checked = !!enable;

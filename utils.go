@@ -61,8 +61,7 @@ func GetAppData() string {
 // SAC 库
 func GetSACDepotkey(redownload bool) (map[string]string, error) {
 	// 构建本地文件路径
-	AppData := GetAppData()
-	localFile := filepath.Join(AppData, "ManifestHub GUI", "DepotKeys", "depotkeys.json")
+	localFile := filepath.Join(_MainConfig_, "DepotKeys", "depotkeys.json")
 
 	if redownload {
 		return DownloadSACDepotKey(localFile)
@@ -177,8 +176,7 @@ func DownloadSACDepotKey(localFile string) (map[string]string, error) {
 // Sudama 库
 func GetSudamaDepotkey(redownload bool) (map[string]string, error) {
 	// 构建本地文件路径
-	AppData := GetAppData()
-	localFile := filepath.Join(AppData, "ManifestHub GUI", "DepotKeys", "depotkeys.json")
+	localFile := filepath.Join(_MainConfig_, "DepotKeys", "depotkeys.json")
 
 	if redownload {
 		return DownloadSudamaDepotKey(localFile)
@@ -615,7 +613,7 @@ func GenerateLua(APPID, path string, depotData, manifestData map[string]string) 
 		}
 	}
 
-	// 添加主游戏和Depot到内容中
+	// 添加主游戏和 Depot 到内容中
 	addedAppids := make(map[string]bool)
 
 	// 添加主游戏
