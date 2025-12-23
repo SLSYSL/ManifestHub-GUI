@@ -53,4 +53,4 @@ var _MainConfig_ string
 var Client *sreq.Client
 
 // 版本号
-var version = "v0.1.0-beta.6"
+var version = "v0.1.0-Release"
