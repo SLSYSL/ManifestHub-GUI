@@ -209,96 +209,33 @@ func GetSudamaDepotkey(redownload bool) (map[string]string, error) {
 // Sudama 库下载 DepotKeys
 func DownloadSudamaDepotKey(localFile string) (map[string]string, error) {
 	// Sudama API 基础 URL
-	baseURL := "https://api.993499094.xyz"
+	url := "https://api.993499094.xyz/depotkeys.json"
 
 	// 请求头
 	headers := sreq.Headers{
 		"User-Agent": []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
 	}
 
-	log.Printf("正在连接服务器获取最新数据...")
+	log.Printf("正在从单页API获取数据...")
 
-	// 获取元数据（总页数）
-	metaURL := baseURL + "/api/status"
-	resp, err := Client.Get(metaURL, sreq.WithHeaders(headers)).Text()
+	// 直接从单页API获取数据
+	resp, err := Client.Get(url, sreq.WithHeaders(headers)).Text()
 	if err != nil {
-		return nil, LogAndError("获取元数据失败: %v", err)
+		return nil, LogAndError("从单页API获取数据失败: %v", err)
 	}
 
-	// 解析元数据
-	var meta map[string]interface{}
-	if err := json.Unmarshal([]byte(resp), &meta); err != nil {
-		return nil, LogAndError("解析元数据失败: %v", err)
+	// 解析JSON数据
+	var allKeys map[string]string
+	if err := json.Unmarshal([]byte(resp), &allKeys); err != nil {
+		return nil, LogAndError("解析单页API数据失败: %v", err)
 	}
-
-	// 获取总页数
-	totalPages, ok := meta["total_pages"]
-	if !ok {
-		return nil, LogAndError("元数据中缺少 total_pages 字段")
-	}
-
-	// 转换总页数为整数
-	var pages int
-	switch v := totalPages.(type) {
-	case float64:
-		pages = int(v)
-	case int:
-		pages = v
-	default:
-		return nil, LogAndError("total_pages 字段类型无效: %T", totalPages)
-	}
-
-	log.Printf("发现总页数: %d", pages)
-
-	// 分页获取所有数据
-	allKeys := make(map[string]string)
-
-	// 使用并发提高获取速度
-	var mu sync.Mutex
-	var wg sync.WaitGroup
-	sem := make(chan struct{}, 4) // 限制并发数
-
-	for page := 0; page < pages; page++ {
-		wg.Add(1)
-		sem <- struct{}{}
-
-		go func(pageNum int) {
-			defer wg.Done()
-			defer func() { <-sem }()
-
-			pageURL := fmt.Sprintf("%s/api/fetch?page=%d", baseURL, pageNum)
-			resp, err := Client.Get(pageURL, sreq.WithHeaders(headers)).Text()
-			if err != nil {
-				log.Printf("获取第 %d 页失败: %v", pageNum, err)
-				return
-			}
-
-			// 解析页面数据
-			var pageData map[string]string
-			if err := json.Unmarshal([]byte(resp), &pageData); err != nil {
-				log.Printf("解析第 %d 页数据失败: %v", pageNum, err)
-				return
-			}
-
-			// 合并数据
-			mu.Lock()
-			for key, value := range pageData {
-				allKeys[key] = value
-			}
-			mu.Unlock()
-
-			log.Printf("第 %d 页: 获取 %d 个密钥", pageNum, len(pageData))
-		}(page)
-	}
-
-	wg.Wait()
 
 	// 检查是否获取到数据
 	if len(allKeys) == 0 {
-		return nil, LogAndError("从服务器获取到的数据为空")
+		return nil, LogAndError("从单页API获取到的数据为空")
 	}
 
-	log.Printf("云端共获取 %d 个密钥", len(allKeys))
+	log.Printf("从单页API共获取 %d 个密钥", len(allKeys))
 
 	// 下载成功，保存到本地文件
 	if err := SaveDepotKey(localFile, allKeys); err != nil {
