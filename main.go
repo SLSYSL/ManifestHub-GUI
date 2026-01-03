@@ -70,7 +70,7 @@ func CreateLog() {
 // 全局注册
 func init() {
 	// 初始化自定义 HTTP 客户端
-	Client = sreq.New().SetTimeout(30 * time.Second)
+	Client = sreq.New().SetTimeout(10 * time.Minute)
 
 	// 获取 %AppData% 路径
 	_AppData_ = GetAppData()
