@@ -13,17 +13,17 @@ jobs:
     runs-on: windows-latest
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       # 安装 Go
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: '1.21'
       
       # 安装 Node.js（用于前端资源）
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
       
@@ -39,17 +39,18 @@ jobs:
       - name: Build with Wails
         run: wails build -platform windows/amd64 -o ManifestHub-GUI.exe
       
-      # 上传构建产物
+      # 上传构建产物（使用新版本）
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ManifestHub-GUI-Windows
           path: build/bin/ManifestHub-GUI.exe
+          retention-days: 30
       
       # 创建 Release（仅在打 tag 时）
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: build/bin/ManifestHub-GUI.exe
         env:
