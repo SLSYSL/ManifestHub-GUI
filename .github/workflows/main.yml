@@ -1,49 +1,49 @@
 name: Build Windows Executable
 
 on:
-  push:
-    branches: [ main, master ]
-    tags: [ 'v*' ]
-  pull_request:
-    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
   build-windows:
     runs-on: windows-latest
-    
+
     steps:
-      - uses: actions/checkout@v4
-      
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       # 安装 Go
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.21'
-      
-      # 安装 Node.js（用于前端资源）
+
+      # 安装 Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      
+
       # 安装 Wails
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-      
+
+      # 切换至包含 package.json 的子目录
+      - name: Change to frontend directory
+        run: cd frontend
+
       # 安装项目依赖
       - name: Install dependencies
-        run: npm install
-      
+        run: npm install --prefix frontend
+
       # 构建应用
       - name: Build with Wails
         run: wails build -platform windows/amd64 -o ManifestHub-GUI.exe
-      
-      # 上传构建产物（使用新版本）
+
+      # 上传构建产物
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ManifestHub-GUI-Windows
+          name: ManifestHub-GUI
           path: build/bin/ManifestHub-GUI.exe
           retention-days: 30
       
