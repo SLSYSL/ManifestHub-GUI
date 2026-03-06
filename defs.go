@@ -6,7 +6,7 @@ import (
 	"github.com/winterssy/sreq"
 )
 
-输入 DLCInfo struct {
+type DLCInfo struct {
 	Data map[string]struct {
 		Common   map[string]interface{} `json:"common"`
 		Extended map[string]interface{} `json:"extended"`
