@@ -1,0 +1,32 @@
+# 忽略前端/文档/构建
+frontend/
+doc/
+build/
+dist/
+.github/
+
+# 忽略配置和模块文件
+wails.json
+go.mod
+go.sum
+
+# 忽略资源和二进制
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.avif
+*.ico
+*.exe
+*.dll
+*.log
+
+# 可选：忽略说明文件
+README.md
+LICENSE
+Makefile
+
+# 系统文件
+.DS_Store
+Thumbs.db

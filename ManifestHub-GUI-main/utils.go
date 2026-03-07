@@ -209,7 +209,7 @@ func GetSudamaDepotkey(redownload bool) (map[string]string, error) {
 // Sudama 库下载 DepotKeys
 func DownloadSudamaDepotKey(localFile string) (map[string]string, error) {
 	// Sudama API 基础 URL
-	url := "https://proxy.052222.xyz/api.993499094.xyz/depotkeys.json"
+	url := "https://api.993499094.xyz/depotkeys.json"
 
 	// 请求头
 	headers := sreq.Headers{
