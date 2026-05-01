@@ -10,6 +10,7 @@
 <p align="center">一个基于 Golang & Wails 开发的提取 Steam 密钥工具</p>
 
 ## 说明
+> 注意: 此项目目前处于搁置状态, 短期时间甚至永远不会继续维护.
 
 技术栈:
 - Wails 2.X
