@@ -2,6 +2,7 @@
 package main
 
 import (
+	"ManifestHub/utils"
 	"embed"
 	"fmt"
 	"log"
@@ -73,7 +74,7 @@ func init() {
 	Client = sreq.New().SetTimeout(10 * time.Minute)
 
 	// 获取 %AppData% 路径
-	_AppData_ = GetAppData()
+	_AppData_ = utils.GetAppData()
 
 	// 获取 ManifestHub GUI 文件夹
 	_MainConfig_ = filepath.Join(_AppData_, "ManifestHub GUI")

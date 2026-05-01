@@ -287,7 +287,7 @@ func GetManifests(APPID string) (map[string]string, error) {
 	}
 
 	resp, err := Client.Get(
-		fmt.Sprintf("https://steam.ddxnb.cn/v1/info/%s", APPID),
+		fmt.Sprintf("https://api.steamcmd.net/v1/info/%s", APPID),
 		sreq.WithHeaders(headers),
 	).Text()
 
