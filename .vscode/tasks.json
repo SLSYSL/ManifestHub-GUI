@@ -1,0 +1,55 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Install: Download Dependencies",
+            "type": "shell",
+            "command": "go mod download; cd frontend; npm install",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [],
+            "detail": "根据 go.mod 安装所有依赖"
+        },
+        {
+            "label": "Clean: Remove Dependencies Cache",
+            "type": "shell",
+            "command": "go mod tidy; cd frontend; npm cache clean",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [],
+            "detail": "清除依赖缓存和前端缓存依赖"
+        },
+        {
+            "label": "Run: Start Application (Dev Mode)",
+            "type": "shell",
+            "command": "wails dev",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [],
+            "detail": "使用 Wails 开发模式运行程序"
+        },        
+        {
+            "label": "Build: Compile Application",
+            "type": "shell",
+            "command": "wails build",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [],
+            "detail": "使用 Wails 编译程序"
+        },
+        {
+            "label": "Build: Compile Application (Small)",
+            "type": "shell",
+            "command": "wails build -webview2 embed -clean -ldflags=\"-w -s\" -upx -upxflags=\"--best --lzma\"",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [],
+            "detail": "使用 Wails 编译程序 (小体积)"
+        }
+    ]
+}
