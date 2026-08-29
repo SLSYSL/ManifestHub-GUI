@@ -10,11 +10,9 @@
 .vscode
 
 # Neutralinojs binaries and builds
+.tmp
 /bin
 /dist
-
-# Neutralinojs client (minified)
-neutralino.js
 
 # Neutralinojs related files
 .storage
