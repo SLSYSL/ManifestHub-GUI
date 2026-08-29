@@ -10,7 +10,7 @@
 .vscode
 
 # Neutralinojs binaries and builds
-.tmp
+/.tmp
 /bin
 /dist
 
