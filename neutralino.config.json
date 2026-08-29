@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "defaultMode": "window",
   "port": 0,
-  "documentRoot": "/resources/",
+  "documentRoot": "/resources/dist/",
   "url": "/",
   "enableServer": true,
   "enableNativeAPI": true,
@@ -29,8 +29,8 @@
       "center": true,
       "fullScreen": false,
       "alwaysOnTop": false,
-      "icon": "/resources/icons/appIcon.png",
-      "enableInspector": true,
+      "icon": "/resources/dist/logo.png",
+      "enableInspector": false,
       "borderless": false,
       "maximize": false,
       "hidden": false,
@@ -61,9 +61,8 @@
   },
   "cli": {
     "binaryName": "manifesthub-gui",
-    "resourcesPath": "/resources/",
+    "resourcesPath": "/resources/dist",
     "extensionsPath": "/extensions/",
-    "clientLibrary": "/resources/js/neutralino.js",
     "binaryVersion": "6.9.0",
     "clientVersion": "6.9.0"
   }
