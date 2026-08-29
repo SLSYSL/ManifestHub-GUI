@@ -3,22 +3,25 @@
   import homeIcon from "./assets/home.svg?raw";
   import cogIcon from "./assets/cog.svg?raw";
   import HomePage from "./pages/Home.svelte";
+  import SettingsPage from "./pages/Settings.svelte";
 
   let currentPage = $state("home");
 
   const NavItems = [
-    { id: "home", label: "首页", icon: homeIcon },
-    { id: "settings", label: "设置", icon: cogIcon },
+    { id: "home", label: "首页", icon: homeIcon, page: HomePage },
+    { id: "settings", label: "设置", icon: cogIcon, page: SettingsPage },
   ];
 </script>
 
 <Dock items={NavItems} bind:activeId={currentPage} />
 
 <main>
-  <section class="page" aria-hidden={currentPage !== "home"}>
-    <HomePage />
-  </section>
-  <section class="page" aria-hidden={currentPage !== "settings"}>Test</section>
+  {#each NavItems as item}
+    {@const Page = item.page}
+    <section class="page" aria-hidden={currentPage !== item.id}>
+      <Page />
+    </section>
+  {/each}
 </main>
 
 <style>
