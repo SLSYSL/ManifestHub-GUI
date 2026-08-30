@@ -13,13 +13,13 @@
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tsconfig/svelte": "^5.0.8",
     "@types/node": "^24.13.3",
+    "execa": "^10.0.1",
     "svelte": "^5.56.10",
     "svelte-check": "^4.7.6",
     "typescript": "~6.0.2",
     "vite": "^8.2.2"
   },
   "dependencies": {
-    "@neutralinojs/lib": "^6.9.0",
-    "execa": "^10.0.1"
+    "@neutralinojs/lib": "^6.9.0"
   }
 }
