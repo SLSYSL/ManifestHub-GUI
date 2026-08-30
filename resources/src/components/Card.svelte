@@ -1,12 +1,24 @@
 <script lang="ts">
+  import type { HTMLAttributes } from "svelte/elements";
+
   let {
     children,
+    label = "",
+    labelHidden = false,
     padding = "12px",
     class: className = "",
     style: externalStyle = "",
     as: tag = "div",
     ...rest
-  } = $props();
+  }: {
+    children: () => any;
+    label?: string;
+    labelHidden?: boolean;
+    padding?: string;
+    class?: string;
+    style?: string;
+    as?: keyof HTMLElementTagNameMap;
+  } & HTMLAttributes<HTMLElement> = $props();
 </script>
 
 <svelte:element
@@ -17,6 +29,9 @@
     .join(" ")}
   {...rest}
 >
+  {#if label}
+    <h2 class:sr-only={labelHidden} style="margin: 0 0 4px 0">{label}</h2>
+  {/if}
   {@render children()}
 </svelte:element>
 
@@ -26,5 +41,6 @@
     background-color: hsl(var(--surface));
     border: 1px solid hsl(var(--border));
     border-radius: var(--radius);
+    font-size: 0.875rem;
   }
 </style>

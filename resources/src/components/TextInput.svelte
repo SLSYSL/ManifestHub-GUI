@@ -2,8 +2,8 @@
   import type { HTMLInputAttributes } from "svelte/elements";
 
   let {
-    value,
-    label,
+    value = "",
+    label = "",
     placeholder = "",
     id = crypto.randomUUID(),
     labelHidden = false,
