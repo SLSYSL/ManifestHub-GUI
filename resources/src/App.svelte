@@ -1,11 +1,21 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  import Neutralino from "@neutralinojs/lib";
   import Dock from "./components/Dock.svelte";
   import homeIcon from "./assets/home.svg?raw";
   import cogIcon from "./assets/cog.svg?raw";
   import HomePage from "./pages/Home.svelte";
   import SettingsPage from "./pages/Settings.svelte";
 
-  let currentPage = $state("home");
+  let currentPage = "home";
+
+  onMount(async () => {
+    try {
+      currentPage = await Neutralino.storage.getData("currentPage");
+    } catch (e) {
+      Neutralino.debug.log(`读取存储失败: ${e}`);
+    }
+  });
 
   const NavItems = [
     { id: "home", label: "首页", icon: homeIcon, page: HomePage },
@@ -13,10 +23,20 @@
   ];
 </script>
 
-<Dock items={NavItems} bind:activeId={currentPage} />
+<Dock
+  items={NavItems}
+  activeId={currentPage}
+  onSelect={async (id: string) => {
+    currentPage = id;
+    await Neutralino.storage.setData("currentPage", currentPage);
+  }}
+/>
 
 <main>
   {#each NavItems as item}
+    {#if currentPage == item.id}
+      <h1 class="sr-only" tabindex="-1">{item.label}</h1>
+    {/if}
     {@const Page = item.page}
     <section class="page" aria-hidden={currentPage !== item.id}>
       <Page />

@@ -21,7 +21,7 @@ const neuCustom = (): PluginOption => [{
       if (!address || typeof address === 'string') {
         throw new Error('Failed to get server address');
       }
-      await $`neu run -- --url=http://127.0.0.1:${address.port} --window-enable-inspector=true`;
+      await $`neu run -- --url=http://127.0.0.1:${address.port} --window-enable-inspector=true --export-auth-info`;
       launchedNeutralino = true;
 
       const authFile = path.resolve(process.cwd(), '.tmp', 'auth_info.json');

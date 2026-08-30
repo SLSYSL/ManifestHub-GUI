@@ -7,10 +7,12 @@
 
   let {
     items,
-    activeId = $bindable(),
+    activeId,
+    onSelect,
   }: {
     items: NavItem[];
     activeId?: string;
+    onSelect?: (id: string) => void;
   } = $props();
 </script>
 
@@ -24,7 +26,7 @@
           aria-label={item.label}
           aria-current={activeId === item.id ? "page" : undefined}
           onclick={() => {
-            activeId = item.id;
+            onSelect?.(item.id);
           }}
         >
           {@html item.icon}
