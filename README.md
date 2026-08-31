@@ -10,8 +10,7 @@
 <p align="center">一个基于 Golang & Wails 开发的提取 Steam 密钥工具</p>
 
 ## 说明
-> 此项目目前处于搁置状态, 短期时间甚至永远不会继续维护. (正在开发一款全新的 Steam 增强工具: [VeilT](https://github.com/SLSYSL/VeilT))  
-> 目前发布 issue 非紧急情况不会回复 (紧急情况如: [停止使用api issue](https://github.com/SLSYSL/ManifestHub-GUI/issues/5) 要求更换非 ddxnb.cn 等相关 API)
+> 主分支暂时处于冻结状态，不接受新提交，所有开发工作已迁移至 [refactor/next](https://github.com/SLSYSL/ManifestHub-GUI/tree/refactor/next) 分支，待重构完成后将合并回主分支  
 
 技术栈:
 - Wails 2.X
