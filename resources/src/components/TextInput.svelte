@@ -48,4 +48,10 @@
     border-color: hsl(var(--accent));
     outline: none;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    input {
+      transition: none;
+    }
+  }
 </style>

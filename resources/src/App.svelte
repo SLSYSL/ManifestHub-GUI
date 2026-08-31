@@ -7,14 +7,19 @@
   import HomePage from "./pages/Home.svelte";
   import SettingsPage from "./pages/Settings.svelte";
 
-  let currentPage = "home";
+  let currentPage = $state("home");
 
   onMount(async () => {
-    try {
-      currentPage = await Neutralino.storage.getData("currentPage");
-    } catch (e) {
-      Neutralino.debug.log(`读取存储失败: ${e}`);
-    }
+    Neutralino.storage
+      .getData("currentPage")
+      .then((savedPage) => {
+        if (typeof savedPage === "string" && savedPage) {
+          currentPage = savedPage;
+        }
+      })
+      .catch((e) => {
+        Neutralino.debug.log(`读取存储失败: ${e}`);
+      });
   });
 
   const NavItems = [
@@ -37,9 +42,8 @@
     {#if currentPage == item.id}
       <h1 class="sr-only" tabindex="-1">{item.label}</h1>
     {/if}
-    {@const Page = item.page}
     <section class="page" aria-hidden={currentPage !== item.id}>
-      <Page />
+      <item.page />
     </section>
   {/each}
 </main>
@@ -49,17 +53,25 @@
     position: absolute;
     inset: 0;
     opacity: 0;
-    padding: 10px 14px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 1.25rem;
     pointer-events: none;
     visibility: hidden;
     transition:
-      opacity 0.25s ease,
-      visibility 0.25s;
+      opacity 120ms,
+      visibility 120ms;
   }
 
   .page[aria-hidden="false"] {
     opacity: 1;
     pointer-events: auto;
     visibility: visible;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page {
+      transition: none;
+    }
   }
 </style>
