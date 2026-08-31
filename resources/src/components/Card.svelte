@@ -37,10 +37,16 @@
 
 <style>
   .card {
+    margin: 0;
     padding: var(--card-padding, 12px);
     background-color: hsl(var(--surface));
     border: 1px solid hsl(var(--border));
     border-radius: var(--radius);
     font-size: 0.875rem;
+    list-style: none;
+  }
+
+  .card :global(li) {
+    list-style: none;
   }
 </style>
