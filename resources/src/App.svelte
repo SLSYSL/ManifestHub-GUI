@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import Neutralino from "@neutralinojs/lib";
   import { House, Settings } from "@lucide/svelte";
   import { ModeWatcher } from "mode-watcher";
   import * as Tabs from "$lib/components/ui/tabs/index.js";
@@ -11,26 +9,11 @@
     { id: "home", label: "首页", icon: House, page: HomePage },
     { id: "settings", label: "设置", icon: Settings, page: SettingsPage },
   ];
-
-  let currentPage = $state(TabsItems[0].id);
-
-  onMount(async () => {
-    Neutralino.storage
-      .getData("currentPage")
-      .then((savedPage) => {
-        if (typeof savedPage === "string" && savedPage) {
-          currentPage = savedPage;
-        }
-      })
-      .catch((e) => {
-        Neutralino.debug.log(`读取存储失败: ${e}`);
-      });
-  });
 </script>
 
 <ModeWatcher />
 
-<Tabs.Root value={currentPage}>
+<Tabs.Root value={TabsItems[0].id}>
   <Tabs.List
     class="fixed bottom-6 left-1/2 -translate-x-1/2 z-1"
     variant="line"
