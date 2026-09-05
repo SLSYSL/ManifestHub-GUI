@@ -1,14 +1,7 @@
 <script lang="ts">
-  import TextInput from "../components/TextInput.svelte";
+  import { Input } from "$lib/components/ui/input/index.js";
 </script>
 
 <form role="search" aria-label="游戏搜索">
-  <TextInput
-    label="搜索"
-    labelHidden
-    placeholder="请输入游戏名"
-    autocomplete="off"
-    spellcheck="false"
-    aria-describedby="search-hint"
-  />
+  <Input aria-label="游戏搜索框" placeholder="请输入游戏名" />
 </form>

@@ -1,13 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Neutralino from "@neutralinojs/lib";
-  import Dock from "./components/Dock.svelte";
-  import homeIcon from "./assets/home.svg?raw";
-  import cogIcon from "./assets/cog.svg?raw";
+  import { House, Settings } from "@lucide/svelte";
+  import { ModeWatcher } from "mode-watcher";
+  import * as Tabs from "$lib/components/ui/tabs/index.js";
   import HomePage from "./pages/Home.svelte";
   import SettingsPage from "./pages/Settings.svelte";
 
-  let currentPage = $state("home");
+  const TabsItems = [
+    { id: "home", label: "首页", icon: House, page: HomePage },
+    { id: "settings", label: "设置", icon: Settings, page: SettingsPage },
+  ];
+
+  let currentPage = $state(TabsItems[0].id);
 
   onMount(async () => {
     Neutralino.storage
@@ -21,57 +26,24 @@
         Neutralino.debug.log(`读取存储失败: ${e}`);
       });
   });
-
-  const NavItems = [
-    { id: "home", label: "首页", icon: homeIcon, page: HomePage },
-    { id: "settings", label: "设置", icon: cogIcon, page: SettingsPage },
-  ];
 </script>
 
-<Dock
-  items={NavItems}
-  activeId={currentPage}
-  onSelect={async (id: string) => {
-    currentPage = id;
-    await Neutralino.storage.setData("currentPage", currentPage);
-  }}
-/>
+<ModeWatcher />
 
-<main>
-  {#each NavItems as item}
-    {#if currentPage == item.id}
-      <h1 class="sr-only" tabindex="-1">{item.label}</h1>
-    {/if}
-    <section class="page" aria-hidden={currentPage !== item.id}>
+<Tabs.Root value={currentPage}>
+  <Tabs.List
+    class="fixed bottom-6 left-1/2 -translate-x-1/2 z-1"
+    variant="line"
+  >
+    {#each TabsItems as item}
+      <Tabs.Trigger value={item.id} aria-label={item.label}>
+        <item.icon />
+      </Tabs.Trigger>
+    {/each}
+  </Tabs.List>
+  {#each TabsItems as item}
+    <Tabs.Content value={item.id} class="p-5">
       <item.page />
-    </section>
+    </Tabs.Content>
   {/each}
-</main>
-
-<style>
-  .page {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    height: 100%;
-    overflow-y: auto;
-    padding: 1.25rem;
-    pointer-events: none;
-    visibility: hidden;
-    transition:
-      opacity 120ms,
-      visibility 120ms;
-  }
-
-  .page[aria-hidden="false"] {
-    opacity: 1;
-    pointer-events: auto;
-    visibility: visible;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .page {
-      transition: none;
-    }
-  }
-</style>
+</Tabs.Root>
