@@ -15,7 +15,7 @@
 		"config": "resources/tsconfig.json"
 	},
 	"registry": "https://shadcn-svelte.com/registry",
-	"style": "vega",
+	"style": "nova",
 	"iconLibrary": "lucide",
 	"menuColor": "default",
 	"menuAccent": "subtle"
