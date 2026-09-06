@@ -94,7 +94,7 @@ const neuCustom = (): PluginOption => [
       console.log('[vite] Vite build done, starting Neutralino build...');
 
       try {
-        await $`neu build`;
+        await $`neu build --embed-resources`;
         console.log(`Neutralino build completed.`);
       } catch(error) {
         console.error('[vite] Neutralino build failed:', error);
