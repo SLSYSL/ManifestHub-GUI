@@ -1,6 +1,6 @@
 <script lang="ts">
   import { House, Settings } from "@lucide/svelte";
-  import { ModeWatcher } from "mode-watcher";
+  import { ModeWatcher } from "$lib/components/mode-watcher";
   import * as Tabs from "$lib/components/ui/tabs/index.js";
   import HomePage from "./pages/Home.svelte";
   import SettingsPage from "./pages/Settings.svelte";
@@ -25,7 +25,7 @@
     {/each}
   </Tabs.List>
   {#each TabsItems as item}
-    <Tabs.Content value={item.id} class="p-5">
+    <Tabs.Content value={item.id} aria-label={item.label} class="p-5">
       <item.page />
     </Tabs.Content>
   {/each}
