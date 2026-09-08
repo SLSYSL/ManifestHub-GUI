@@ -120,10 +120,16 @@
 	* {
 		@apply border-border outline-ring/50;
 	}
+
 	body {
 		@apply bg-background text-foreground;
 	}
+
 	html {
-		@apply font-sans;
+		@apply font-sans scrollbar-none [&::-webkit-scrollbar]:hidden;
+	}
+
+	img {
+		@apply select-none [-webkit-user-drag:none];
 	}
 }
