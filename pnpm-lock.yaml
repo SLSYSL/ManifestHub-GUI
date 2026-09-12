@@ -9,10 +9,10 @@ importers:
   .:
     dependencies:
       '@tauri-apps/api':
-        specifier: ^2
+        specifier: ^2.11.1
         version: 2.11.1
       '@tauri-apps/plugin-opener':
-        specifier: ^2
+        specifier: ^2.5.5
         version: 2.5.5
       '@tauri-apps/plugin-store':
         specifier: ^2.4.4
@@ -25,7 +25,7 @@ importers:
         specifier: ^3.12.4
         version: 3.12.4
       '@lucide/svelte':
-        specifier: ^1.42.0
+        specifier: ^1.44.0
         version: 1.44.0(svelte@5.57.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.3.0
@@ -40,10 +40,10 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       '@types/node':
-        specifier: ^24.13.3
+        specifier: ^24.13.4
         version: 24.13.4
       bits-ui:
-        specifier: ^2.19.0
+        specifier: ^2.19.2
         version: 2.19.2(@internationalized/date@3.12.4)(svelte@5.57.0)
       clsx:
         specifier: ^2.1.1
@@ -82,7 +82,7 @@ importers:
         specifier: ~6.0.3
         version: 6.0.3
       vite:
-        specifier: ^8.2.2
+        specifier: ^8.3.0
         version: 8.3.0(@types/node@24.13.4)(jiti@2.7.0)
 
 packages:
@@ -686,8 +686,8 @@ packages:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
 
-  nanoid@3.3.18:
-    resolution: {integrity: sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==}
+  nanoid@3.3.19:
+    resolution: {integrity: sha512-Y2tUNy4ouw6tq5oDSKeQYGOyhkUBhNOcGV/02KC+6kd9eDGqdZd++mjMiIDilrBYvjEnCYvVtsuHCuP+okSfug==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -1344,7 +1344,7 @@ snapshots:
 
   mri@1.2.0: {}
 
-  nanoid@3.3.18: {}
+  nanoid@3.3.19: {}
 
   node-fetch-native@1.6.7: {}
 
@@ -1356,7 +1356,7 @@ snapshots:
 
   postcss@8.5.28:
     dependencies:
-      nanoid: 3.3.18
+      nanoid: 3.3.19
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
