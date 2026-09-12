@@ -15,8 +15,8 @@
 			<Label for="dark-mode">深色模式</Label>
 			<Switch
 				id="dark-mode"
-				checked={store.theme === 'dark'}
-				onCheckedChange={() => store.setTheme(store.theme === 'dark' ? 'light' : 'dark')}
+				checked={store.get('theme') === 'dark'}
+				onCheckedChange={(checked) => store.set('theme', checked ? 'dark' : 'light')}
 			/>
 		</div>
 	</Card.Content>

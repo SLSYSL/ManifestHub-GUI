@@ -11,7 +11,7 @@
 	];
 
 	$effect(() => {
-		document.documentElement.classList.toggle('dark', store.theme === 'dark');
+		document.documentElement.classList.toggle('dark', store.get('theme') === 'dark');
 	});
 </script>
 
