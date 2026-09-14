@@ -8,8 +8,7 @@ class Persisted<S extends Record<string, Field<unknown>>> {
 	#values = $state<Record<string, unknown>>({});
 
 	constructor(readonly schema: S) {
-		for (const [k, f] of Object.entries(schema))
-			this.#values[k] = f.resolve?.() ?? f.default;
+		for (const [k, f] of Object.entries(schema)) this.#values[k] = f.resolve?.() ?? f.default;
 	}
 
 	get<K extends keyof S & string>(k: K) {
@@ -28,7 +27,9 @@ class Persisted<S extends Record<string, Field<unknown>>> {
 				if (saved !== undefined) this.#values[k] = saved;
 			}
 			for (const k of Object.keys(this.schema))
-				await b.onKeyChange(k, (v) => { if (v !== undefined) this.#values[k] = v; });
+				await b.onKeyChange(k, (v) => {
+					if (v !== undefined) this.#values[k] = v;
+				});
 			for (const [k, v] of this.#pending) void b.set(k, v);
 			this.#pending.length = 0;
 			await getCurrentWindow().onCloseRequested(() => b.save());
@@ -43,7 +44,6 @@ type Infer<S extends Record<string, Field<unknown>>> = {
 
 export const store = new Persisted({
 	theme: {
-		resolve: () =>
-			matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
-	},
+		resolve: () => (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+	}
 });
