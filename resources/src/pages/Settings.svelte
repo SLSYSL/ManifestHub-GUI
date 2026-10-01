@@ -8,50 +8,6 @@
 	import { Switch } from '$lib/components/ui/switch/index.js';
 	import DndZone from '$lib/components/custom/dnd/DndZone.svelte';
 	import { store } from '$lib/store.svelte.js';
-
-	type Source = {
-		id: string;
-		label: string;
-		data: Array<{
-			id: number | string;
-			name: string;
-		}>;
-	}[];
-
-	let DataSources: Source = $state([
-		{
-			id: 'featured',
-			label: '特色',
-			data: [
-				{ id: 1, name: 'Test 1' },
-				{ id: 2, name: 'Test 2' }
-			]
-		},
-		{
-			id: 'search',
-			label: '搜索',
-			data: [
-				{ id: 1, name: 'Test 1' },
-				{ id: 2, name: 'Test 2' }
-			]
-		},
-		{
-			id: 'key',
-			label: '密钥',
-			data: [
-				{ id: 1, name: 'Test 1' },
-				{ id: 2, name: 'Test 2' }
-			]
-		},
-		{
-			id: 'manifest',
-			label: '清单',
-			data: [
-				{ id: 1, name: 'Test 1' },
-				{ id: 2, name: 'Test 2' }
-			]
-		}
-	]);
 </script>
 
 <Card.Root class="mb-4">
@@ -65,17 +21,23 @@
 				数据源
 			</Dialog.Trigger>
 			<Dialog.Content>
-				<Dialog.Title>数据源设置</Dialog.Title>
-				<Dialog.Description>配置数据来源，管理状态与优先级，并定义解析逻辑</Dialog.Description>
-				<Tabs.Root value={DataSources[0].id}>
+				<Dialog.Header>
+					<Dialog.Title>数据源设置</Dialog.Title>
+					<Dialog.Description>配置数据来源，管理状态与优先级，并定义解析逻辑</Dialog.Description>
+				</Dialog.Header>
+				<Tabs.Root>
 					<Tabs.List variant="line">
-						{#each DataSources as item}
+						{#each store.get("sources") as item}
 							<Tabs.Trigger value={item.id}>{item.label}</Tabs.Trigger>
 						{/each}
 					</Tabs.List>
-					{#each DataSources as group}
-						<Tabs.Content value={group.id} aria-label={group.label} class="flex flex-col gap-2">
-							<DndZone bind:items={group.data} options={{ morphDisabled: true }}>
+					{#each store.get("sources") as group}
+						<Tabs.Content
+							value={group.id}
+							aria-label={group.label}
+							class="no-scrollbar max-h-72 overflow-y-auto"
+						>
+							<DndZone bind:items={group.data} class="flex flex-col gap-2 m-1">
 								{#snippet children(item)}
 									<Card.Root>
 										<Card.Content class="flex items-center justify-between">
@@ -96,8 +58,10 @@
 				输出格式
 			</Dialog.Trigger>
 			<Dialog.Content>
-				<Dialog.Title>输出格式设置</Dialog.Title>
-				<Dialog.Description>定义生成文件的格式、命名和后缀</Dialog.Description>
+				<Dialog.Header>
+					<Dialog.Title>输出格式设置</Dialog.Title>
+					<Dialog.Description>定义生成文件的格式、命名和后缀</Dialog.Description>
+				</Dialog.Header>
 			</Dialog.Content>
 		</Dialog.Root>
 	</Card.Content>

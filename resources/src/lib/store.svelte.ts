@@ -45,5 +45,39 @@ type Infer<S extends Record<string, Field<unknown>>> = {
 export const store = new Persisted({
 	theme: {
 		resolve: () => (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+	},
+	sources: {
+		default: [{
+			id: 'featured',
+			label: '特色',
+			data: [
+				{ id: 1, name: 'Test 1' },
+				{ id: 2, name: 'Test 2' }
+			]
+		},
+		{
+			id: 'search',
+			label: '搜索',
+			data: [
+				{ id: 1, name: 'Test 1' },
+				{ id: 2, name: 'Test 2' }
+			]
+		},
+		{
+			id: 'key',
+			label: '密钥',
+			data: [
+				{ id: 1, name: 'Test 1' },
+				{ id: 2, name: 'Test 2' }
+			]
+		},
+		{
+			id: 'manifest',
+			label: '清单',
+			data: [
+				{ id: 1, name: 'Test 1' },
+				{ id: 2, name: 'Test 2' }
+			]
+		}]
 	}
 });
